@@ -1,0 +1,15 @@
+{
+  "tips": [
+    {
+      "id": 1,
+      "categoryId": 1,
+      "title": "Easy Plastic Recycling",
+      "content": "Remove caps and rinse containers before recycling",
+      "createdAt": "2024-02-15T10:00:00Z",
+      "updatedAt": "2024-02-15T10:00:00Z"
+    }
+  ],
+  "totalItems": 1,
+  "page": 0,
+  "size": 10
+}

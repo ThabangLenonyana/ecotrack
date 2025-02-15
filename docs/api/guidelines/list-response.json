@@ -1,0 +1,15 @@
+{
+  "guidelines": [
+    {
+      "id": 1,
+      "categoryId": 1,
+      "title": "Plastic Recycling Guidelines",
+      "content": "Clean and sort plastic items by their recycling numbers",
+      "createdAt": "2024-02-15T10:00:00Z",
+      "updatedAt": "2024-02-15T10:00:00Z"
+    }
+  ],
+  "totalItems": 1,
+  "page": 0,
+  "size": 10
+}
