@@ -9,15 +9,16 @@ A Spring Boot REST API for the Enviro365 waste sorting mobile application, desig
 - [System Architecture](#system-architecture)
 - [Database Schema](#database-schema)
 - [API Documentation](#api-documentation)
-- [Setup and Installation](#setup-and-installation)
 - [Testing](#testing)
+- [Setup and Installation](#setup-and-installation)
+
 
 ## Technologies Used
 - Java 17
 - Spring Boot 3.x
 - Spring Data JPA
 - H2 Database
-- Gradle
+- Maven
 - Spring Validation
 - Lombok
 
@@ -27,26 +28,26 @@ src/
 ├── main/
 │   ├── java/
 │   │   └── com/enviro/assessment/grad001/thabanglenonyana/
-│   │       ├── WasteManagementApplication.java
-│   │       ├── controller/
-│   │       │   └── (REST endpoints)
-│   │       ├── service/
-│   │       │   └── (Business logic)
-│   │       ├── repository/
-│   │       │   └── (Data access)
-│   │       ├── model/
-│   │       │   └── (Entity classes)
-│   │       ├── dto/
-│   │       │   └── (Data transfer objects)
+│   │       ├── Application.java
+│   │       ├── category/
+│   │       │   └── (Waste Category Layers)
+│   │       ├── guideline/
+│   │       │   └── (Disposal Guidline Layers)
+│   │       ├── tip/
+│   │       │   └── (Recycling Tip Layers)
 │   │       └── exception/
 │   │           └── (Custom exceptions)
 │   └── resources/
 │       ├── application.properties
-│       └── data.sql (for initial data)
+│       ├── 1-schema.sql 
+|       └── 2-data.sql 
 └── test/
     └── java/
         └── com/enviro/assessment/grad001/thabanglenonyana/
-            └── (Test classes)
+            └── waste_management/
+│               ├── WasteCategoryTest.java           
+│               ├── DisposalGuidelineTest.java       
+│               └── RecyclingTipTest.java           
 ```
 
 ## System Architecture
@@ -113,10 +114,61 @@ RESTful API for the Enviro365 waste management application. The API provides end
 | PUT | `/tips/{id}` | Update tip | [request](/docs/api/tips/update-request.json) | [response](/docs/api/tips/update-response.json) | 200, 404, 400 |
 | DELETE | `/tips/{id}` | Delete tip | N/A  | N/A  | 204, 404 |
 
+## API Error Handling
+
+The waste management API implements comprehensive error handling for all endpoints:
+
+| Scenario | HTTP Status | Description |
+|----------|-------------|-------------|
+| Success | 200 OK | Request completed successfully |
+| Creation Success | 201 CREATED | Resource created successfully |
+| Deletion Success | 204 NO_CONTENT | Resource deleted successfully |
+| Validation Error | 400 BAD_REQUEST | Invalid input data or constraints violated |
+| Not Found | 404 NOT_FOUND | Requested resource doesn't exist |
+| Server Error | 500 INTERNAL_SERVER_ERROR | Unexpected server-side error |
+
+### Exception Handling Examples
+- [`ResourceNotFoundException`](src/main/java/com/enviro/assessment/grad001/thabanglenonyana/waste_management/exception/ResourceNotFoundException.java): When requested resource is not found
+- [`ConstraintViolationException`](jakarta.validation.ConstraintViolationException): For validation failures
+- General runtime exceptions: Mapped to INTERNAL_SERVER_ERROR
+
 ### API Request Sequence Diagram
 
 ![API Sequence Diagram](docs/Check-In%20Sequence-2025-02-15-115134.svg)
 
+## Testing
+
+### Unit Tests Coverage
+The application includes comprehensive unit tests covering:
+
+#### WasteCategory Operations
+- CRUD operations (Create, Read, Update, Delete)
+- Input validation
+- Error scenarios
+- Service exceptions
+
+#### Test Categories
+1. **Success Scenarios**
+   - Get all categories
+   - Get category by ID
+   - Create category
+   - Update existing category
+   - Delete category
+
+2. **Validation Tests**
+   - Empty category name
+   - Null description
+   - Invalid data format
+
+3. **Error Handling**
+   - Non-existing category
+   - Database errors
+   - Constraint violations
+
+4. **Edge Cases**
+   - Empty list handling
+   - Service exceptions
+   - Update conflicts
 
 ## Setup and Installation
 ### 1. Prerequisites
@@ -137,5 +189,5 @@ spring.datasource.url=jdbc:h2:mem:wastesortdb
 
 ### 4. Build and run the application.
 ```bash
-./gradlew build
-./gradlew bootRun
+./mvnw build
+./mvnw spring-boot:run
