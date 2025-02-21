@@ -85,25 +85,27 @@ The system follows a layered architecture pattern with clear separation of conce
 
 
 ## API Documentation
-RESTful API for the Enviro365 waste management application. The API provides endpoints for managing waste categories, disposal guidelines, and recycling tips.
+RESTful API for the Enviro365 waste management application. The API provides endpoints for managing waste categories, disposal guidelines, and recycling tips. All endpoints are prefixed with `/api`.
 
 ### Waste Categories
 | Method | Endpoint | Description | Request Body | Response Body | Status Codes |
 |--------|----------|-------------|--------------|---------------|--------------|
 | GET | `/categories` | List all categories | N/A | [response](/docs/api/categories/list-response.json) | 200, 404 |
-| POST | `/categories` | Create new category | [request](/docs/api/categories/create-request.json) | [response](/docs/api/categories/create-response.json) | 201, 400 |
-| GET | `/categories/{id}` | Get category by ID | N/A | [response](/docs/api/categories/get-response.json) | 200, 404 |
-| PUT | `/categories/{id}` | Update category | [request](/docs/api/categories/update-request.json) | [response](/docs/api/categories/update-response.json) | 200, 404, 400 |
-| DELETE | `/categories/{id}` | Delete category | N/A  | N/A  | 204, 404 |
+| POST | `/categories` | Create new category | [request](/docs/api/categories/create-request.json) | [response](/docs/api/categories/create-response.json) | 201, 400, 409 |
+| GET | `categories/{id}` | Get category by ID | N/A | [response](/docs/api/categories/get-response.json) | 200, 404 |
+| PUT | `categories/{id}` | Update category | [request](/docs/api/categories/update-request.json) | [response](/docs/api/categories/update-response.json) | 200, 400, 404 |
+| DELETE | `/categories/{id}` | Delete category | N/A | N/A | 204, 404 |
 
 ### Disposal Guidelines
 | Method | Endpoint | Description | Request Body | Response Body | Status Codes |
 |--------|----------|-------------|--------------|---------------|--------------|
-| GET | `/guidelines` | List all guidelines | N/A  | [response](/docs/api/guidelines/list-response.json) | 200, 404 |
-| POST | `/guidelines` | Create new guideline | [request](/docs/api/guidelines/create-request.json) | [response](/docs/api/guidelines/create-response.json) | 201, 400 |
-| GET | `/guidelines/{id}` | Get guideline by ID | N/A  | [response](/docs/api/guidelines/get-response.json) | 200, 404 |
-| PUT | `/guidelines/{id}` | Update guideline | [request](/docs/api/guidelines/update-request.json) | [response](/docs/api/guidelines/update-response.json) | 200, 404, 400 |
-| DELETE | `/guidelines/{id}` | Delete guideline | N/A  | N/A  | 204, 404 |
+| GET | `/guidelines` | List all guidelines | N/A | [response](/docs/api/guidelines/list-response.json) | 200 |
+| POST | `/guidelines` | Create new guideline | [request](/docs/api/guidelines/create-request.json) | [response](/docs/api/guidelines/create-response.json) | 201, 400, 409 |
+| GET | `/guidelines/{id}` | Get guideline by ID | N/A | [response](/docs/api/guidelines/get-response.json) | 200, 404 |
+| PUT | `/guidelines/{id}` | Update guideline | [request](/docs/api/guidelines/update-request.json) | [response](/docs/api/guidelines/update-response.json) | 200, 400, 404 |
+| DELETE | `/guidelines/{id}` | Delete guideline | N/A | N/A | 204, 404 |
+| PATCH | `/guidelines/{guidelineId}/assign/{categoryId}` | Assign guideline to category | N/A | [response](/docs/api/guidelines/assign-response.json) | 200, 400, 404 |
+| PATCH | `/guidelines/{guidelineId}/unassign` | Remove category assignment | N/A | [response](/docs/api/guidelines/unassign-response.json) | 200, 404 |
 
 ### Recycling Tips
 | Method | Endpoint | Description | Request Body | Response Body | Status Codes |
@@ -118,14 +120,15 @@ RESTful API for the Enviro365 waste management application. The API provides end
 
 The waste management API implements comprehensive error handling for all endpoints:
 
-| Scenario | HTTP Status | Description |
-|----------|-------------|-------------|
-| Success | 200 OK | Request completed successfully |
-| Creation Success | 201 CREATED | Resource created successfully |
-| Deletion Success | 204 NO_CONTENT | Resource deleted successfully |
-| Validation Error | 400 BAD_REQUEST | Invalid input data or constraints violated |
-| Not Found | 404 NOT_FOUND | Requested resource doesn't exist |
-| Server Error | 500 INTERNAL_SERVER_ERROR | Unexpected server-side error |
+| Status Code | Description | Example Scenarios |
+|-------------|-------------|-------------------|
+| 200 OK | Request successful | Get resource, Update resource |
+| 201 CREATED | Resource created | Create new resource |
+| 204 NO_CONTENT | Resource deleted | Delete operations |
+| 400 BAD_REQUEST | Invalid input/validation error | Empty title, Invalid format |
+| 404 NOT_FOUND | Resource not found | Invalid ID |
+| 409 CONFLICT | Resource conflict | Duplicate title |
+| 500 SERVER_ERROR | Server error | Unexpected errors |
 
 ### Exception Handling Examples
 - [`ResourceNotFoundException`](src/main/java/com/enviro/assessment/grad001/thabanglenonyana/waste_management/exception/ResourceNotFoundException.java): When requested resource is not found
