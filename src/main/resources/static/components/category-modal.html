@@ -1,0 +1,60 @@
+<template id="category-modal-template">
+    <div class="bg-white rounded-2xl shadow-xl max-w-2xl w-full mx-4 overflow-hidden">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-green-500 to-green-600 p-6 text-white">
+            <div class="flex justify-between items-start">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                        <i class="text-2xl" data-category-icon></i>
+                    </div>
+                    <h2 class="text-2xl font-bold" data-category-name></h2>
+                </div>
+                <button class="p-2 hover:bg-white/10 rounded-lg transition-colors" data-close-modal>
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <p class="mt-4 text-white/90" data-category-description></p>
+        </div>
+
+        <!-- Content -->
+        <div class="p-6 space-y-6">
+            <!-- Guidelines Section -->
+            <div>
+                <div class="flex items-center gap-2 mb-4">
+                    <i class="fas fa-book-open text-blue-600"></i>
+                    <h3 class="text-lg font-semibold">Disposal Guidelines</h3>
+                </div>
+                <div class="bg-blue-50 rounded-xl p-4" data-guidelines-container></div>
+            </div>
+            
+            <!-- Tips Section -->
+            <div>
+                <div class="flex items-center gap-2 mb-4">
+                    <i class="fas fa-lightbulb text-orange-600"></i>
+                    <h3 class="text-lg font-semibold">Recycling Tips</h3>
+                </div>
+                <div class="bg-orange-50 rounded-xl p-4" data-tips-container></div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="guideline-item-template">
+    <li class="flex items-start gap-3 p-2 hover:bg-blue-100/50 rounded-lg transition-colors">
+        <i class="fas fa-check-circle text-blue-600 mt-1"></i>
+        <div>
+            <h4 class="font-medium text-blue-900" data-guideline-title></h4>
+            <p class="text-blue-800/80 text-sm mt-1" data-guideline-instructions></p>
+        </div>
+    </li>
+</template>
+
+<template id="tip-item-template">
+    <li class="flex items-start gap-3 p-2 hover:bg-orange-100/50 rounded-lg transition-colors">
+        <i class="fas fa-lightbulb text-orange-600 mt-1"></i>
+        <div>
+            <h4 class="font-medium text-orange-900" data-tip-title></h4>
+            <p class="text-orange-800/80 text-sm mt-1" data-tip-content></p>
+        </div>
+    </li>
+</template>

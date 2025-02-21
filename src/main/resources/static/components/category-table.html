@@ -1,0 +1,30 @@
+<template id="categories-table-template">
+    <div class="overflow-x-auto"></div>
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Guidelines</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tips</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200" id="categories-table-body">
+                <!-- Table rows will be inserted here -->
+            </tbody>
+        </table>
+    </div>
+</template>
+
+<template id="category-row-template">
+    <tr data-category-id="${category.id}">
+        <td class="px-6 py-4 whitespace-nowrap" data-category-name></td>
+        <td class="px-6 py-4" data-category-description></td>
+        <td class="px-6 py-4 whitespace-nowrap" data-guidelines-count></td>
+        <td class="px-6 py-4 whitespace-nowrap" data-tips-count></td>
+        <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex space-x-2" data-action-buttons></div>
+        </td>
+    </tr>
+</template>

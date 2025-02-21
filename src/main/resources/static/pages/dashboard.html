@@ -1,0 +1,159 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Enviro365</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <style>
+        /* Add styles from index.html */
+        .navbar-pill {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 9999px;
+            padding: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .eco-leaf {
+            position: relative;
+            width: 24px;
+            height: 24px;
+        }
+
+        .eco-leaf::before {
+            content: '';
+            position: absolute;
+            background: currentColor;
+            width: 12px;
+            height: 12px;
+            border-radius: 12px 0;
+            transform: rotate(45deg);
+            left: 6px;
+            top: 6px;
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <div id="header-container"></div>
+
+    <!-- Dashboard Header -->
+    <div class="bg-white shadow">
+        <div class="content-container">
+            <div class="py-6">
+                <div class="flex items-center justify-between">
+                    <h1 class="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+                    <div class="flex items-center space-x-4">
+                        <span class="text-sm text-gray-500">Welcome, Admin</span>
+                        <button class="text-gray-600 hover:text-green-600 transition-colors">
+                            <i class="fas fa-cog text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Navigation Tabs Container -->
+                <div id="nav-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="content-container py-6">
+        <!-- Overview Section -->
+        <div id="overview-container" class="section-card p-6 mb-6">
+            <!-- Overview content will be loaded here -->
+        </div>
+    
+        <!-- Categories Section -->
+        <div id="categories-section" class="section-card p-6 mb-6 hidden">
+            <!-- Action buttons will be inserted here -->
+    <div id="categories-table-container">
+        <!-- Table will be inserted here -->
+    </div>
+        </div>
+    </main>
+
+    <!-- Modal Container -->
+    <div id="modal-container" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden flex items-center justify-center">
+        <!-- Modal content will be inserted here -->
+    </div>
+
+    <!-- Templates -->
+    <div id="templates-container" style="display: none;"></div>
+
+    <!-- Add Toast Container for Notifications -->
+    <div id="toast-container" class="fixed bottom-4 right-4 z-50"></div>
+
+    <!-- Scripts -->
+    <script src="/js/confirmDialog.js"></script>
+    <script src="/js/componentLoader.js"></script>
+    <script src="/js/mockDataService.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/categories.js"></script>
+    <script src="/js/dashboard-overview.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadTemplates();
+            
+            await ComponentLoader.initializeHeader();
+            await ComponentLoader.initializeDashboardNav();
+            await ComponentLoader.initializeOverview();          
+            await initializeCategoriesSection();
+            
+            // Handle tab switching
+            const tabs = document.querySelectorAll('.dashboard-tab');
+            const sections = {
+                'overview': document.getElementById('overview-container'),
+                'categories-section': document.getElementById('categories-section')
+            };
+            
+        // Show overview by default
+            sections['overview'].classList.remove('hidden');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('tab-active'));
+                    
+                    // Add active class to clicked tab
+                    tab.classList.add('tab-active');
+                    
+                    // Hide all sections
+                    Object.values(sections).forEach(section => {
+                        if (section) section.classList.add('hidden');
+                    });
+                    
+                    // Show selected section
+                    const targetId = tab.getAttribute('href').substring(1);
+                    const targetSection = sections[targetId];
+                    if (targetSection) {
+                        targetSection.classList.remove('hidden');
+                    }
+                });
+            });
+    }); 
+    </script>
+
+
+    
+</body>
+</html>

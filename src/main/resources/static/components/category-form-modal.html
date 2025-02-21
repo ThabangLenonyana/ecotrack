@@ -1,0 +1,34 @@
+<template id="category-form-modal-template">
+    <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+        <div class="flex justify-between items-center px-6 py-4 border-b">
+            <h3 class="text-lg font-medium text-gray-900" data-modal-title></h3>
+            <button class="text-gray-400 hover:text-gray-500" data-close-modal>
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <form id="category-form" class="px-6 py-4">
+            <div class="space-y-4">
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+                    <input type="text" id="name" name="name" required
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500">
+                </div>
+                <div>
+                    <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                    <textarea id="description" name="description" rows="3" required
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"></textarea>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end space-x-3">
+                <button type="button" data-close-modal
+                    class="px-4 py-2 border rounded-md text-gray-700 hover:bg-gray-50">
+                    Cancel
+                </button>
+                <button type="submit"
+                    class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">
+                    Save
+                </button>
+            </div>
+        </form>
+    </div>
+</template>
