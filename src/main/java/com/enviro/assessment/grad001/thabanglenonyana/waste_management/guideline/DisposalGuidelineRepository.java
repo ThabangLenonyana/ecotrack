@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DisposalGuidelineRepository extends JpaRepository<DisposalGuideline, Long> {
-
+    boolean existsByTitle(String title);
 }

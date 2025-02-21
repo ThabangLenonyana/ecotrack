@@ -1,5 +1,6 @@
 package com.enviro.assessment.grad001.thabanglenonyana.waste_management.category;
 
+import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -17,13 +18,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.enviro.assessment.grad001.thabanglenonyana.waste_management.exception.DuplicateResourceException;
 import com.enviro.assessment.grad001.thabanglenonyana.waste_management.exception.ResourceNotFoundException;
 
+/**
+ * This class is a controller class that will be used to handle HTTP requests for the WasteCategory entity.
+ */
 @RestController
 @RequestMapping("/api/categories")
 @RequiredArgsConstructor
 public class WasteCategoryController {
 
+    // Inject the WasteCategoryService
     private final WasteCategoryService wasteCategoryService;
 
     // Get all categories
@@ -60,7 +66,10 @@ public class WasteCategoryController {
             WasteCategoryDTO created = wasteCategoryService.createCategory(categoryDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(created);
         }
-        catch (Exception e) {
+        catch (DuplicateResourceException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+        catch (ConstraintViolationException e) {
             return ResponseEntity.badRequest().build();
         }
     }
