@@ -3,6 +3,7 @@ package com.enviro.assessment.grad001.thabanglenonyana.waste_management.guidelin
 import org.springframework.stereotype.Component;
 
 import com.enviro.assessment.grad001.thabanglenonyana.waste_management.category.WasteCategory;
+import com.enviro.assessment.grad001.thabanglenonyana.waste_management.category.WasteCategoryDTO;  // assuming it exists
 
 @Component
 public class DisposalGuidelineMapper {
@@ -22,9 +23,14 @@ public class DisposalGuidelineMapper {
         dto.setTitle(guideline.getTitle());
         dto.setInstructions(guideline.getInstructions());
         
-        // Safe navigation for category
+        // Safe navigation for category and set complete info
         if (guideline.getCategory() != null) {
             dto.setCategoryId(guideline.getCategory().getId());
+            WasteCategory category = guideline.getCategory();
+            WasteCategoryDTO catDTO = new WasteCategoryDTO();
+            catDTO.setId(category.getId());
+            catDTO.setName(category.getName());
+            dto.setCategory(catDTO);
         }
         
         return dto;
@@ -69,7 +75,7 @@ public class DisposalGuidelineMapper {
         }
     }
 
-        /**
+    /**
      * Sets the category for a guideline
      * @param guideline The guideline to update
      * @param category The category to set
