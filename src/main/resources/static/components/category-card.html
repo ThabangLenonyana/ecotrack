@@ -1,29 +1,59 @@
 <template id="category-card-template">
-  <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow flex flex-col h-[280px]">
-    <div class="flex items-center gap-3 mb-4">
-      <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
-        <i class="fas fa-recycle text-2xl text-green-600" data-category-icon></i>
-      </div>
-      <h3 class="text-xl font-semibold text-gray-800" data-category-name></h3>
+    <div class="bg-white rounded-xl shadow-md p-6 
+                transition-all duration-300
+                hover:shadow-xl hover:shadow-green-100/50
+                border border-gray-100 hover:border-green-200
+                group flex flex-col h-[280px]">
+        <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 rounded-full bg-green-50 
+                        flex items-center justify-center
+                        group-hover:bg-green-100 
+                        transition-colors duration-300
+                        shadow-inner">
+                <i class="fas fa-recycle text-2xl text-green-600 
+                         group-hover:text-green-700
+                         transition-colors duration-300" 
+                   data-category-icon></i>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 
+                       group-hover:text-green-700
+                       transition-colors duration-300" 
+                data-category-name></h3>
+        </div>
+        <p class="text-gray-700 flex-1 overflow-y-auto mb-4 
+                  prose prose-sm leading-relaxed" 
+           data-category-description></p>
+        <div class="flex items-center justify-between mt-auto pt-4 
+                    border-t border-gray-100
+                    group-hover:border-green-50">
+            <div class="flex gap-2">
+                <span class="inline-flex items-center px-2.5 py-0.5 
+                             rounded-full text-xs font-medium 
+                             transition-colors" 
+                      data-guidelines-badge>
+                    <i class="fas fa-book-open mr-1"></i>
+                    <span data-guidelines-count>0</span>&nbsp;
+                    <span data-guidelines-label>Guide</span>
+                </span>
+                <span class="inline-flex items-center px-2.5 py-0.5 
+                             rounded-full text-xs font-medium 
+                             transition-colors" 
+                      data-tips-badge>
+                    <i class="fas fa-lightbulb mr-1"></i>
+                    <span data-tips-count>0</span>&nbsp;
+                    <span data-tips-label>Tip</span>
+                </span>
+            </div>
+            <button class="bg-green-600 text-white px-2 py-1.5 
+                           sm:px-4 sm:py-2 text-sm sm:text-base rounded-lg 
+                           hover:bg-green-700 hover:shadow-md
+                           active:bg-green-800 
+                           transition-all duration-300
+                           group-hover:shadow-green-100"
+                    data-view-details>
+                <span class="hidden sm:inline">View Details</span>
+                <span class="sm:hidden">View</span>
+            </button>
+        </div>
     </div>
-    <p class="text-gray-600 flex-1 overflow-y-auto mb-4 prose prose-sm" data-category-description></p>
-    <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
-      <div class="flex gap-2">
-        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors" data-guidelines-badge>
-          <i class="fas fa-book-open mr-1"></i>
-          <span data-guidelines-count>0</span>&nbsp;<span data-guidelines-label>Guide</span>
-        </span>
-        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors" data-tips-badge>
-          <i class="fas fa-lightbulb mr-1"></i>
-          <span data-tips-count>0</span>&nbsp;<span data-tips-label>Tip</span>
-        </span>
-      </div>
-      <button 
-        class="bg-green-500 text-white px-2 py-1.5 sm:px-4 sm:py-2 text-sm sm:text-base rounded hover:bg-green-600 transition-colors"
-        data-view-details>
-        <span class="hidden sm:inline">View Details</span>
-        <span class="sm:hidden">View</span>
-      </button>
-    </div>
-  </div>
 </template>

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,6 +9,7 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/animations.css">
     <style>
         /* Add styles from index.html */
         .navbar-pill {
@@ -48,21 +48,64 @@
             to { opacity: 1; }
         }
 
+        /* Add new header styles */
+        .header-bg {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            min-height: 240px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 0;
+        }
+
+        .dashboard-header {
+            position: relative;
+            z-index: 1;
+            color: white;
+        }
+
+        .content-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        /* Add this to ensure main content doesn't overlay modals */
+        main.content-container {
+            z-index: 1;
+        }
+
+        /* Ensure modal container is above everything */
+        #modal-container {
+            z-index: 100;
+        }
+
     </style>
+    <!-- Particles.js -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="/js/particles-config.js"></script>
 </head>
 <body class="bg-gray-50">
+    <!-- Green Background with animations -->
+    <div class="header-bg animated-gradient animated-shapes">
+        <div id="particles-js" class="absolute inset-0 z-0"></div>
+    </div>
+
     <!-- Header -->
-    <div id="header-container"></div>
+    <div id="header-container" class="dashboard-header"></div>
 
     <!-- Dashboard Header -->
-    <div class="bg-white shadow">
+    <div class="dashboard-header">
         <div class="content-container">
             <div class="py-6">
                 <div class="flex items-center justify-between">
-                    <h1 class="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+                    <h1 class="text-3xl font-bold">Admin Dashboard</h1>
                     <div class="flex items-center space-x-4">
-                        <span class="text-sm text-gray-500">Welcome, Admin</span>
-                        <button class="text-gray-600 hover:text-green-600 transition-colors">
+                        <span class="text-sm">Welcome, Admin</span>
+                        <button class="text-white hover:text-green-200 transition-colors">
                             <i class="fas fa-cog text-xl"></i>
                         </button>
                     </div>
@@ -75,7 +118,7 @@
     </div>
 
     <!-- Main Content -->
-    <main class="content-container py-6">
+    <main class="content-container py-6 relative z-10 bg-gray-50">
         <!-- Overview Section -->
         <div id="overview-container" class="section-card p-6 mb-6">
             <!-- Overview content will be loaded here -->
@@ -84,14 +127,19 @@
         <!-- Categories Section -->
         <div id="categories-section" class="section-card p-6 mb-6 hidden">
             <!-- Action buttons will be inserted here -->
-    <div id="categories-table-container">
-        <!-- Table will be inserted here -->
-    </div>
+            <div id="categories-table-container">
+            <!-- Table will be inserted here -->
+            </div>
+        </div>
+        <div id="guidelines-section" class="section-card p-6 mb-6 hidden">
+            <div id="guidelines-table-container">
+                <!-- Table will be inserted here -->
+            </div>
         </div>
     </main>
 
-    <!-- Modal Container -->
-    <div id="modal-container" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden flex items-center justify-center">
+    <!-- Modal Container - Updated z-index -->
+    <div id="modal-container" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden flex items-center justify-center z-[100]">
         <!-- Modal content will be inserted here -->
     </div>
 
@@ -107,53 +155,65 @@
     <script src="/js/mockDataService.js"></script>
     <script src="/js/api.js"></script>
     <script src="/js/categories.js"></script>
+    <script src="/js/guidelines.js"></script>
     <script src="/js/dashboard-overview.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
-            await loadTemplates();
+            // Initialize particles.js
+            particlesJS('particles-js', particlesConfig);
             
-            await ComponentLoader.initializeHeader();
-            await ComponentLoader.initializeDashboardNav();
-            await ComponentLoader.initializeOverview();          
-            await initializeCategoriesSection();
-            
-            // Handle tab switching
-            const tabs = document.querySelectorAll('.dashboard-tab');
-            const sections = {
-                'overview': document.getElementById('overview-container'),
-                'categories-section': document.getElementById('categories-section')
-            };
-            
-        // Show overview by default
-            sections['overview'].classList.remove('hidden');
-            
-            tabs.forEach(tab => {
-                tab.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    
-                    // Remove active class from all tabs
-                    tabs.forEach(t => t.classList.remove('tab-active'));
-                    
-                    // Add active class to clicked tab
-                    tab.classList.add('tab-active');
-                    
-                    // Hide all sections
-                    Object.values(sections).forEach(section => {
-                        if (section) section.classList.add('hidden');
+            try {
+                // Initialize components in sequence
+                await ComponentLoader.initializeHeader();
+                await ComponentLoader.initializeDashboardNav();
+                await ComponentLoader.initializeOverview();          
+                
+                // Initialize category and guideline sections
+                await initializeCategoriesSection();
+                await initializeGuidelinesSection();
+                
+                // Handle tab switching
+                const tabs = document.querySelectorAll('.dashboard-tab');
+                const sections = {
+                    'overview': document.getElementById('overview-container'),
+                    'categories-section': document.getElementById('categories-section'),
+                    'guidelines-section': document.getElementById('guidelines-section')
+                };
+                
+                // Show overview by default
+                sections['overview'].classList.remove('hidden');
+                
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        
+                        // Remove active class from all tabs
+                        tabs.forEach(t => t.classList.remove('tab-active'));
+                        
+                        // Add active class to clicked tab
+                        tab.classList.add('tab-active');
+                        
+                        // Hide all sections
+                        Object.values(sections).forEach(section => {
+                            if (section) section.classList.add('hidden');
+                        });
+                        
+                        // Show selected section
+                        const targetId = tab.getAttribute('href').substring(1);
+                        const targetSection = sections[targetId];
+                        if (targetSection) {
+                            targetSection.classList.remove('hidden');
+                        }
                     });
-                    
-                    // Show selected section
-                    const targetId = tab.getAttribute('href').substring(1);
-                    const targetSection = sections[targetId];
-                    if (targetSection) {
-                        targetSection.classList.remove('hidden');
-                    }
                 });
-            });
-    }); 
+            } catch (error) {
+                console.error('Failed to initialize dashboard:', error);
+                const errorToast = document.createElement('div');
+                errorToast.className = 'bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg mb-2';
+                errorToast.textContent = 'Failed to initialize dashboard. Please refresh the page.';
+                document.getElementById('toast-container')?.appendChild(errorToast);
+            }
+        }); 
     </script>
-
-
-    
 </body>
 </html>

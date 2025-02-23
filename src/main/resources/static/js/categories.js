@@ -1,4 +1,16 @@
-// src/main/resources/static/js/dashboard/categories.js
+console.log('Categories.js loaded');
+
+const DEBUG = true;
+debugLog('Debug logging initialized');
+function debugLog(message, data = null) {
+    if (DEBUG) {
+        if (data) {
+            console.log(`[Categories] ${message}:`, data);
+        } else {
+            console.log(`[Categories] ${message}`);
+        }
+    }
+}
 // DOM Elements and Templates
 const modalContainer = document.getElementById('modal-container');
 const categoriesTableContainer = document.getElementById('categories-table-container');
@@ -11,85 +23,133 @@ const TEMPLATE_PATHS = {
     confirm: '/components/confirm-modal.html'
 };
 
-// Template references object
-const templates = {
-    table: null,
-    row: null,
-    form: null,  // Changed from formModal to form to match the template ID
-    actions: null,
-    rowActions: null,
-    confirm: null
+// Create namespace for Categories module
+const CategoryManager = {
+    DEBUG: true,
+    templates: {},
+    TEMPLATE_PATH: {
+        table: '/components/category-table.html',
+        form: '/components/category-form-modal.html',
+        actions: '/components/category-actions.html',
+        confirm: '/components/confirm-modal.html'
+    },
 
+    debugLog(message, data = null) {
+        if (this.DEBUG) {
+            if (data) {
+                console.log(`[Categories] ${message}:`, data);
+            } else {
+                console.log(`[Categories] ${message}`);
+            }
+        }
+    },
+
+    async loadTemplates() {
+        try {
+            this.debugLog('Starting template loading process');
+            
+            // Add missing modalContainer check
+            if (!modalContainer) {
+                this.debugLog('Modal container not found');
+                throw new Error('Modal container not found');
+            }
+
+            // Ensure template container exists
+            let templateContainer = document.getElementById('templates-container');
+            if (!templateContainer) {
+                this.debugLog('Creating template container');
+                templateContainer = document.createElement('div');
+                templateContainer.id = 'templates-container';
+                document.body.appendChild(templateContainer);
+            }
+
+            // Load all templates
+            const templateLoads = Object.entries(this.TEMPLATE_PATH).map(async ([key, path]) => {
+                this.debugLog(`Loading template: ${key} from ${path}`);
+                const response = await fetch(path);
+                const html = await response.text();
+                return { key, html };
+            });
+
+            // Wait for all templates to load
+            const loadedTemplates = await Promise.all(templateLoads);
+            
+            // Clear and update template container
+            templateContainer.innerHTML = loadedTemplates.map(t => t.html).join('');
+            
+            // Update template references with explicit IDs
+            this.templates = {
+                table: document.getElementById('categories-table-template'),
+                form: document.getElementById('category-form-modal-template'),
+                actions: document.getElementById('category-actions-template'),
+                confirm: document.getElementById('confirm-modal-template'),
+                row: document.getElementById('category-row-template'),
+                rowActions: document.getElementById('row-actions-template')
+            };
+
+            // Verify all templates are loaded
+            Object.entries(this.templates).forEach(([key, template]) => {
+                if (!template) {
+                    throw new Error(`Template ${key} not found after loading`);
+                }
+                this.debugLog(`Template ${key} loaded successfully`);
+            });
+
+            return true;
+        } catch (error) {
+            this.debugLog('Template loading failed:', error);
+            console.error('Template loading failed:', error);
+            return false;
+        }
+    }
 };
 
 /**
- * Initialize categories section
+ * Initialize categories section with improved error handling
  */
 async function initializeCategoriesSection() {
-    const section = document.getElementById('categories-section');
-    if (!section) {
-        console.error('Categories section not found');
-        return;
-    }
-    
-    if (await loadTemplates()) {
-        // Add action buttons
-        const actionsContent = templates.actions.content.cloneNode(true);
-        section.insertBefore(actionsContent, section.firstChild);
+    try {
+        console.log('Starting categories initialization');
+        const section = document.getElementById('categories-section');
         
-        // Create table container if it doesn't exist
-        if (!categoriesTableContainer) {
-            categoriesTableContainer = document.createElement('div');
-            categoriesTableContainer.id = 'categories-table-container';
-            section.appendChild(categoriesTableContainer);
+        if (!section) {
+            throw new Error('Categories section not found');
         }
+
+        // Load templates first
+        let templatesLoaded = await CategoryManager.loadTemplates();
+        if (!templatesLoaded) {
+            throw new Error('Failed to load templates');
+        }
+
+        // Clear section and add action buttons
+        const actionsTemplate = CategoryManager.templates.actions;
+        if (!actionsTemplate) {
+            throw new Error('Actions template not found');
+        }
+
+        const actionsContent = actionsTemplate.content.cloneNode(true);
+        section.insertBefore(actionsContent, section.firstChild);
+
+        // Setup event listeners explicitly
+        const addButton = document.getElementById('add-category-btn');
+        if (!addButton) {
+            throw new Error('Add category button not found');
+        }
+
+        addButton.addEventListener('click', () => {
+            console.log('Add category button clicked');
+            showCategoryForm();
+        });
 
         // Initialize table
         await loadCategoriesTable();
-        setupEventListeners();
-    }
-}
+        
+        console.log('Categories section initialized successfully');
 
-/**
- * Load all required templates
- */
-async function loadTemplates() {
-    try {
-        const [tableHtml, formHtml, actionsHtml, confirmHtml] = await Promise.all([
-            fetch(TEMPLATE_PATHS.table).then(res => res.text()),
-            fetch(TEMPLATE_PATHS.form).then(res => res.text()),
-            fetch(TEMPLATE_PATHS.actions).then(res => res.text()),
-            fetch(TEMPLATE_PATHS.confirm).then(res => res.text())
-        ]);
-
-        const templateContainer = document.getElementById('templates-container');
-        if (!templateContainer) throw new Error('Template container not found');
-
-        templateContainer.innerHTML = tableHtml + formHtml + actionsHtml + confirmHtml;
-
-        // Store template references
-        templates.table = document.getElementById('categories-table-template');
-        templates.row = document.getElementById('category-row-template');
-        templates.form = document.getElementById('category-form-modal-template');
-        templates.actions = document.getElementById('category-actions-template');
-        templates.rowActions = document.getElementById('row-actions-template');
-        templates.confirm = document.getElementById('confirm-modal-template');
-
-        // Verify all templates loaded
-        const missingTemplates = Object.entries(templates)
-            .filter(([key, value]) => !value)
-            .map(([key]) => key);
-
-        if (missingTemplates.length > 0) {
-            throw new Error(`Missing templates: ${missingTemplates.join(', ')}`);
-        }
-
-
-        return true;
     } catch (error) {
-        console.error('Failed to load templates:', error);
-        showError('Failed to initialize categories section');
-        return false;
+        console.error('Failed to initialize categories:', error);
+        showError(`Categories initialization failed: ${error.message}`);
     }
 }
 
@@ -110,13 +170,13 @@ async function loadCategoriesTable() {
  * Render categories table
  */
 function renderCategoriesTable(categories) {
-    if (!templates.table || !categoriesTableContainer) {
+    if (!CategoryManager.templates.table || !categoriesTableContainer) {
         console.error('Missing required templates or containers');
         return;
     }
     
     try {
-        const tableContent = templates.table.content.cloneNode(true);
+        const tableContent = CategoryManager.templates.table.content.cloneNode(true);
         const tbody = tableContent.querySelector('tbody');
         
         if (tbody) {
@@ -146,7 +206,7 @@ function renderCategoriesTable(categories) {
 
 // Create table row for a category
 function createCategoryRow(category) {
-    const row = templates.row.content.cloneNode(true);
+    const row = CategoryManager.templates.row.content.cloneNode(true);
     
     // Populate row data
     row.querySelector('tr').setAttribute('data-category-id', category.id);
@@ -158,7 +218,7 @@ function createCategoryRow(category) {
         `${category.recyclingTips?.length || 0} tips`;
 
     // Add action buttons
-    const actionButtons = templates.rowActions.content.cloneNode(true);
+    const actionButtons = CategoryManager.templates.rowActions.content.cloneNode(true);
     row.querySelector('[data-action-buttons]').appendChild(actionButtons);
 
     // Setup action buttons
@@ -172,11 +232,11 @@ function createCategoryRow(category) {
 function showCategoryForm(category = null) {
     try {
         // Check if template exists
-        if (!templates.form) {
+        if (!CategoryManager.templates.form) {
             throw new Error('Category form template not found');
         }
 
-        const modalContent = templates.form.content.cloneNode(true);
+        const modalContent = CategoryManager.templates.form.content.cloneNode(true);
         const form = modalContent.querySelector('#category-form');
         const titleElement = modalContent.querySelector('[data-modal-title]');
         
@@ -234,7 +294,6 @@ function showCategoryForm(category = null) {
     }
 }
 
-// Delete category
 // Delete category
 async function deleteCategory(id) {
     const row = document.querySelector(`[data-category-id="${id}"]`);
@@ -305,5 +364,11 @@ function showError(message) {
 // Setup event listeners
 function setupEventListeners() {
     const addButton = document.getElementById('add-category-btn');
-    addButton.addEventListener('click', () => showCategoryForm());
+    if (addButton) {
+        // Consistent event listener registration
+        addButton.addEventListener('click', () => showCategoryForm());
+    } else {
+        CategoryManager.debugLog('Add category button not found');
+    }
 }
+

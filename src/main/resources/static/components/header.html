@@ -3,31 +3,39 @@
         <nav class="content-container">
             <div class="navbar-pill bg-white shadow-lg">
                 <div class="flex justify-between items-center px-6">
-                    <!-- Logo Component Placeholder -->
                     <div data-logo-container id="logo-template"></div>
 
-                    <!-- Navigation Links -->
                     <div class="hidden md:flex space-x-8 animate-fade-in">
                         <a href="/pages/index.html" class="relative group px-2">
-                            <span class="text-gray-700 hover:text-green-600 font-medium transition-colors">Home</span>
+                            <span class="text-gray-700 hover:text-green-600 font-medium transition-colors" data-nav-link="home">Home</span>
+                            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
+                        </a>
+                        <a href="/pages/about.html" class="relative group px-2">
+                            <span class="text-gray-700 hover:text-green-600 font-medium transition-colors" data-nav-link="about">About</span>
                             <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
                         </a>
                         <a href="/pages/dashboard.html" class="relative group px-2">
-                            <span class="text-green-600 font-medium transition-colors">Dashboard</span>
-                            <span class="absolute bottom-0 left-0 w-full h-0.5 bg-green-600"></span>
-                        </a>
-                        <a href="#about" class="relative group px-2">
-                            <span class="text-gray-700 hover:text-green-600 font-medium transition-colors">About</span>
+                            <span class="text-gray-700 hover:text-green-600 font-medium transition-colors" data-nav-link="dashboard">Dashboard</span>
                             <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
                         </a>
                     </div>
-
-                    <!-- Mobile Menu Button -->
-                    <button class="md:hidden text-gray-700 focus:outline-none transition-transform hover:scale-110">
-                        <i class="fas fa-bars"></i>
-                    </button>
                 </div>
             </div>
         </nav>
     </header>
+
+    <script>
+        // Highlight current page in navigation
+        const currentPage = window.location.pathname;
+        const navLinks = document.querySelectorAll('[data-nav-link]');
+        
+        navLinks.forEach(link => {
+            const page = link.getAttribute('data-nav-link');
+            if (currentPage.includes(page) || 
+               (page === 'home' && currentPage === '/')) {
+                link.classList.remove('text-gray-700');
+                link.classList.add('text-green-600');
+            }
+        });
+    </script>
 </template>
