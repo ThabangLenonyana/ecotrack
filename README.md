@@ -1,4 +1,9 @@
 # Enviro365 Waste Management API
+## Homepage UI
+![Home Page Interface](docs/home.gif)
+
+## Dashboard UI
+![Dashboard Interface](docs/dashboard.gif)
 
 ## Project Overview
 A Spring Boot REST API for the Enviro365 waste sorting mobile application, designed to promote sustainable waste management practices and environmental consciousness.
@@ -9,6 +14,7 @@ A Spring Boot REST API for the Enviro365 waste sorting mobile application, desig
 - [System Architecture](#system-architecture)
 - [Database Schema](#database-schema)
 - [API Documentation](#api-documentation)
+- [UI Examples](#ui-examples)
 - [Testing](#testing)
 - [Setup and Installation](#setup-and-installation)
 
@@ -87,6 +93,10 @@ The system follows a layered architecture pattern with clear separation of conce
 ## API Documentation
 RESTful API for the Enviro365 waste management application. The API provides endpoints for managing waste categories, disposal guidelines, and recycling tips. All endpoints are prefixed with `/api`.
 
+Interactive API documentation is available at:
+- Swagger UI: http://localhost:8080/swagger-ui.html
+- OpenAPI JSON: http://localhost:8080/v3/api-docs
+
 ### Waste Categories
 | Method | Endpoint | Description | Request Body | Response Body | Status Codes |
 |--------|----------|-------------|--------------|---------------|--------------|
@@ -100,7 +110,6 @@ RESTful API for the Enviro365 waste management application. The API provides end
 | Method | Endpoint | Description | Request Body | Response Body | Status Codes |
 |--------|----------|-------------|--------------|---------------|--------------|
 | GET | `/guidelines` | List all guidelines | N/A | [response](/docs/api/guidelines/list-response.json) | 200 |
-| POST | `/guidelines` | Create new guideline | [request](/docs/api/guidelines/create-request.json) | [response](/docs/api/guidelines/create-response.json) | 201, 400, 409 |
 | GET | `/guidelines/{id}` | Get guideline by ID | N/A | [response](/docs/api/guidelines/get-response.json) | 200, 404 |
 | PUT | `/guidelines/{id}` | Update guideline | [request](/docs/api/guidelines/update-request.json) | [response](/docs/api/guidelines/update-response.json) | 200, 400, 404 |
 | DELETE | `/guidelines/{id}` | Delete guideline | N/A | N/A | 204, 404 |
@@ -111,10 +120,12 @@ RESTful API for the Enviro365 waste management application. The API provides end
 | Method | Endpoint | Description | Request Body | Response Body | Status Codes |
 |--------|----------|-------------|--------------|---------------|--------------|
 | GET | `/tips` | List all tips | N/A  | [response](/docs/api/tips/list-response.json) | 200, 404 |
-| POST | `/tips` | Create new tip | [request](/docs/api/tips/create-request.json) | [response](/docs/api/tips/create-response.json) | 201, 400 |
+| POST | `/tips` | Create new tip | [request](/docs/api/tips/create-request.json) | [response](/docs/api/tips/create-response.json) | 201, 400, 409 |
 | GET | `/tips/{id}` | Get tip by ID | N/A  | [response](/docs/api/tips/get-response.json) | 200, 404 |
 | PUT | `/tips/{id}` | Update tip | [request](/docs/api/tips/update-request.json) | [response](/docs/api/tips/update-response.json) | 200, 404, 400 |
 | DELETE | `/tips/{id}` | Delete tip | N/A  | N/A  | 204, 404 |
+| PATCH | `/tips/{tipId}/assign/{categoryId}` | Assign tip to category | N/A | [response](/docs/api/tips/assign-response.json) | 200, 400, 404 |
+| PATCH | `/tips/{tipId}/unassign` | Remove category assignment | N/A | [response](/docs/api/tips/unassign-response.json) | 200, 404 |
 
 ## API Error Handling
 
@@ -125,7 +136,7 @@ The waste management API implements comprehensive error handling for all endpoin
 | 200 OK | Request successful | Get resource, Update resource |
 | 201 CREATED | Resource created | Create new resource |
 | 204 NO_CONTENT | Resource deleted | Delete operations |
-| 400 BAD_REQUEST | Invalid input/validation error | Empty title, Invalid format |
+| 400 BAD_REQUEST | Invalid input/validation error | Empty title, Invalid format, Illegal assignment |
 | 404 NOT_FOUND | Resource not found | Invalid ID |
 | 409 CONFLICT | Resource conflict | Duplicate title |
 | 500 SERVER_ERROR | Server error | Unexpected errors |
@@ -138,6 +149,10 @@ The waste management API implements comprehensive error handling for all endpoin
 ### API Request Sequence Diagram
 
 ![API Sequence Diagram](docs/Check-In%20Sequence-2025-02-15-115134.svg)
+
+## UI Examples
+
+
 
 ## Testing
 
@@ -194,3 +209,4 @@ spring.datasource.url=jdbc:h2:mem:wastesortdb
 ```bash
 ./mvnw build
 ./mvnw spring-boot:run
+
