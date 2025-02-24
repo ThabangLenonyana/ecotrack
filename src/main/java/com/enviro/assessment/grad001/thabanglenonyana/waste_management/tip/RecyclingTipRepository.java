@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RecyclingTipRepository extends JpaRepository<RecyclingTip, Long> {
-
+    boolean existsByTitle(String title);
 }

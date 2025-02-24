@@ -5,6 +5,9 @@ import org.springframework.stereotype.Component;
 import com.enviro.assessment.grad001.thabanglenonyana.waste_management.category.WasteCategory;
 import com.enviro.assessment.grad001.thabanglenonyana.waste_management.category.WasteCategoryDTO;  // assuming it exists
 
+/**
+ * Mapper class for converting between DisposalGuideline entities and DTOs
+ */
 @Component
 public class DisposalGuidelineMapper {
 

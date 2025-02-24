@@ -23,8 +23,12 @@ CREATE TABLE IF NOT EXISTS disposal_guidelines (
 -- Create recycling tips table with relationship to waste_categories
 CREATE TABLE IF NOT EXISTS recycling_tips (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(100) NOT NULL,
-    content TEXT NOT NULL,
+    title VARCHAR(100) NOT NULL UNIQUE,
+    steps TEXT NOT NULL,
+    difficulty VARCHAR(10) NOT NULL,
+    environmental_impact TEXT,
+    time_required VARCHAR(50) NOT NULL,
+    required_materials TEXT,
     category_id BIGINT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

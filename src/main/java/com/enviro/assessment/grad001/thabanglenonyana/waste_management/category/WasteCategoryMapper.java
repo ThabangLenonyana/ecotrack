@@ -1,6 +1,5 @@
 package com.enviro.assessment.grad001.thabanglenonyana.waste_management.category;
 
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
@@ -14,6 +13,10 @@ import com.enviro.assessment.grad001.thabanglenonyana.waste_management.tip.Recyc
 public class WasteCategoryMapper {
     
     public WasteCategoryDTO toDTO(WasteCategory category) {
+        if (category == null) {
+            return null;
+        }
+
         WasteCategoryDTO dto = new WasteCategoryDTO();
         dto.setId(category.getId());
         dto.setName(category.getName());
@@ -35,34 +38,19 @@ public class WasteCategoryMapper {
     }
 
     public WasteCategory toEntity(WasteCategoryDTO dto) {
-        WasteCategory category = new WasteCategory();
-        updateEntity(category, dto);
-        return category;
-    }
+        if (dto == null) {
+            return null;
+        }
 
-    public void updateEntity(WasteCategory category, WasteCategoryDTO dto) {
+        WasteCategory category = new WasteCategory();
         category.setName(dto.getName());
         category.setDescription(dto.getDescription());
-        
-        if (dto.getDisposalGuidelines() != null) {
-            Set<DisposalGuideline> guidelines = dto.getDisposalGuidelines().stream()
-                .map(guidelineDto -> toGuidelineEntity(guidelineDto, category))
-                .collect(Collectors.toSet());
-            category.getDisposalGuidelines().clear();
-            category.getDisposalGuidelines().addAll(guidelines);
-        }
-        
-        if (dto.getRecyclingTips() != null) {
-            Set<RecyclingTip> tips = dto.getRecyclingTips().stream()
-                .map(tipDto -> toTipEntity(tipDto, category))
-                .collect(Collectors.toSet());
-            category.getRecyclingTips().clear();
-            category.getRecyclingTips().addAll(tips);
-        }
+        return category;
     }
 
     private DisposalGuidelineDTO toGuidelineDTO(DisposalGuideline guideline) {
         DisposalGuidelineDTO dto = new DisposalGuidelineDTO();
+        dto.setId(guideline.getId());
         dto.setTitle(guideline.getTitle());
         dto.setInstructions(guideline.getInstructions());
         return dto;
@@ -70,23 +58,30 @@ public class WasteCategoryMapper {
 
     private RecyclingTipDTO toTipDTO(RecyclingTip tip) {
         RecyclingTipDTO dto = new RecyclingTipDTO();
+        dto.setId(tip.getId());
         dto.setTitle(tip.getTitle());
-        dto.setContent(tip.getContent());
+        dto.setSteps(tip.getSteps()); // Direct assignment since both use List<String>
+        dto.setDifficulty(tip.getDifficulty());
+        dto.setEnvironmentalImpact(tip.getEnvironmentalImpact());
+        dto.setTimeRequired(tip.getTimeRequired());
+        dto.setRequiredMaterials(tip.getRequiredMaterials());
         return dto;
     }
 
-    private DisposalGuideline toGuidelineEntity(DisposalGuidelineDTO dto, WasteCategory category) {
-        DisposalGuideline guideline = new DisposalGuideline();
-        guideline.setTitle(dto.getTitle());
-        guideline.setInstructions(dto.getInstructions());
-        return guideline;
-    }
+    public void updateEntity(WasteCategory category, WasteCategoryDTO dto) {
+        if (category == null || dto == null) {
+            throw new IllegalArgumentException("Category and DTO must not be null");
+        }
 
-    private RecyclingTip toTipEntity(RecyclingTipDTO dto, WasteCategory category) {
-        RecyclingTip tip = new RecyclingTip();
-        tip.setTitle(dto.getTitle());
-        tip.setContent(dto.getContent());
-        return tip;
+        // Selectively update only non-null fields
+        if (dto.getName() != null) {
+            category.setName(dto.getName());
+        }
+        if (dto.getDescription() != null) {
+            category.setDescription(dto.getDescription());
+        }
+        // Additional fields can be added here
     }
 }
+
 

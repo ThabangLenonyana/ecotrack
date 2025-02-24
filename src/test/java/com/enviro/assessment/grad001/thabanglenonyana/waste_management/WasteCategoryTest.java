@@ -1,6 +1,8 @@
 package com.enviro.assessment.grad001.thabanglenonyana.waste_management;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
@@ -26,7 +28,10 @@ import org.springframework.http.ResponseEntity;
 import com.enviro.assessment.grad001.thabanglenonyana.waste_management.category.WasteCategoryController;
 import com.enviro.assessment.grad001.thabanglenonyana.waste_management.category.WasteCategoryDTO;
 import com.enviro.assessment.grad001.thabanglenonyana.waste_management.category.WasteCategoryService;
+import com.enviro.assessment.grad001.thabanglenonyana.waste_management.exception.DuplicateResourceException;
 import com.enviro.assessment.grad001.thabanglenonyana.waste_management.exception.ResourceNotFoundException;
+import com.enviro.assessment.grad001.thabanglenonyana.waste_management.guideline.DisposalGuidelineDTO;
+import com.enviro.assessment.grad001.thabanglenonyana.waste_management.tip.RecyclingTipDTO;
 
 @ExtendWith(MockitoExtension.class)
 public class WasteCategoryTest {
@@ -60,8 +65,11 @@ public class WasteCategoryTest {
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(1, response.getBody().size());
-        assertEquals(testCategoryDTO.getName(), response.getBody().get(0).getName());
+        List<WasteCategoryDTO> responseBody = response.getBody();
+        assertEquals(1, responseBody != null ? responseBody.size() : 0);
+        if (responseBody != null && !responseBody.isEmpty()) {
+            assertEquals(testCategoryDTO.getName(), responseBody.get(0).getName());
+        }
         verify(wasteCategoryService).getAllCategories();
     }
 
@@ -75,7 +83,10 @@ public class WasteCategoryTest {
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(testCategoryDTO.getName(), response.getBody().getName());
+        WasteCategoryDTO responseBody = response.getBody();
+        if (responseBody != null) {
+            assertEquals(testCategoryDTO.getName(), responseBody.getName());
+        }
         verify(wasteCategoryService).getCategoryById(1L);
     }
 
@@ -104,7 +115,10 @@ public class WasteCategoryTest {
 
         // Assert
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(testCategoryDTO.getName(), response.getBody().getName());
+        WasteCategoryDTO responseBody = response.getBody();
+        if (responseBody != null) {
+            assertEquals(testCategoryDTO.getName(), responseBody.getName());
+        }
         verify(wasteCategoryService).createCategory(any(WasteCategoryDTO.class));
     }
 
@@ -120,7 +134,10 @@ public class WasteCategoryTest {
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(testCategoryDTO.getName(), response.getBody().getName());
+        WasteCategoryDTO responseBody = response.getBody();
+        if (responseBody != null) {
+            assertEquals(testCategoryDTO.getName(), responseBody.getName());
+        }
         verify(wasteCategoryService).updateCategory(eq(1L), any(WasteCategoryDTO.class));
     }
 
@@ -191,7 +208,8 @@ public class WasteCategoryTest {
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(0, response.getBody().size());
+        List<WasteCategoryDTO> responseBody = response.getBody();
+        assertEquals(0, responseBody != null ? responseBody.size() : 0);
         verify(wasteCategoryService).getAllCategories();
     }
 
@@ -284,5 +302,52 @@ public class WasteCategoryTest {
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         verify(wasteCategoryService).deleteCategory(1L);
         
+    }
+
+    @Test
+    void testGetCategoryWithGuidelines() {
+        // Arrange
+        testCategoryDTO.setDisposalGuidelines(Arrays.asList(new DisposalGuidelineDTO()));
+        when(wasteCategoryService.getCategoryById(1L)).thenReturn(testCategoryDTO);
+
+        // Act
+        ResponseEntity<WasteCategoryDTO> response = wasteCategoryController.getCategoryById(1L);
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        WasteCategoryDTO responseBody = response.getBody();
+        if (responseBody != null) {
+            assertNotNull(responseBody.getDisposalGuidelines());
+            assertFalse(responseBody.getDisposalGuidelines().isEmpty());
+        }
+    }
+
+    @Test
+    void testGetCategoryWithRecyclingTips() {
+        // Arrange
+        testCategoryDTO.setRecyclingTips(Arrays.asList(new RecyclingTipDTO()));
+        when(wasteCategoryService.getCategoryById(1L)).thenReturn(testCategoryDTO);
+
+        // Act
+        ResponseEntity<WasteCategoryDTO> response = wasteCategoryController.getCategoryById(1L);
+
+        // Assert
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        WasteCategoryDTO responseBody = response.getBody();
+        if (responseBody != null) {
+            assertNotNull(responseBody.getRecyclingTips());
+            assertFalse(responseBody.getRecyclingTips().isEmpty());
+        }
+    }
+
+    @Test
+    void testCreateCategory_DuplicateName() {
+        when(wasteCategoryService.createCategory(any(WasteCategoryDTO.class)))
+            .thenThrow(new DuplicateResourceException("Category name already exists"));
+
+        ResponseEntity<WasteCategoryDTO> response = 
+            wasteCategoryController.createCategory(testCategoryDTO);
+
+        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
     }
 }

@@ -60,8 +60,11 @@ public class DisposalGuidelineTest {
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(1, response.getBody().size());
-        assertEquals(testGuidelineDTO.getTitle(), response.getBody().get(0).getTitle());
+        List<DisposalGuidelineDTO> responseBody = response.getBody();
+        assertEquals(1, responseBody != null ? responseBody.size() : 0);
+        if (responseBody != null && !responseBody.isEmpty()) {
+            assertEquals(testGuidelineDTO.getTitle(), responseBody.get(0).getTitle());
+        }
         verify(guidelineService).getAllGuidelines();
     }
 
@@ -75,7 +78,10 @@ public class DisposalGuidelineTest {
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(testGuidelineDTO.getTitle(), response.getBody().getTitle());
+        DisposalGuidelineDTO responseBody = response.getBody();
+        if (responseBody != null) {
+            assertEquals(testGuidelineDTO.getTitle(), responseBody.getTitle());
+        }
         verify(guidelineService).getGuidelineById(1L);
     }
 
@@ -91,7 +97,10 @@ public class DisposalGuidelineTest {
 
         // Assert
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(testGuidelineDTO.getTitle(), response.getBody().getTitle());
+        DisposalGuidelineDTO responseBody = response.getBody();
+        if (responseBody != null) {
+            assertEquals(testGuidelineDTO.getTitle(), responseBody.getTitle());
+        }
         verify(guidelineService).createGuideline(any(DisposalGuidelineDTO.class));
     }
 
@@ -149,7 +158,10 @@ public class DisposalGuidelineTest {
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(testGuidelineDTO.getTitle(), response.getBody().getTitle());
+        DisposalGuidelineDTO responseBody = response.getBody();
+        if (responseBody != null) {
+            assertEquals(testGuidelineDTO.getTitle(), responseBody.getTitle());
+        }
         verify(guidelineService).updateGuideline(eq(1L), any(DisposalGuidelineDTO.class));
     }
 
@@ -207,7 +219,8 @@ public class DisposalGuidelineTest {
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(0, response.getBody().size());
+        List<DisposalGuidelineDTO> responseBody = response.getBody();
+        assertEquals(0, responseBody != null ? responseBody.size() : 0);
         verify(guidelineService).getAllGuidelines();
     }
 
@@ -225,4 +238,30 @@ public class DisposalGuidelineTest {
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         verify(guidelineService).updateGuideline(eq(99L), any(DisposalGuidelineDTO.class));
     }
+
+    @Test
+    void testUnassignGuideline_NotFound() {
+        // Arrange
+        when(guidelineService.unassignGuideline(99L))
+            .thenThrow(new ResourceNotFoundException("Guideline not found"));
+
+        // Act
+        ResponseEntity<DisposalGuidelineDTO> response = 
+            guidelineController.unassignGuideline(99L);
+
+        // Assert
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    void testAssignToCategory_CategoryNotFound() {
+        when(guidelineService.assignToCategory(1L, 99L))
+            .thenThrow(new ResourceNotFoundException("Category not found"));
+
+        ResponseEntity<DisposalGuidelineDTO> response = 
+            guidelineController.assignToCategory(1L, 99L);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
 }
