@@ -195,7 +195,52 @@ function renderGuidelinesList(guidelines, container) {
     container.appendChild(ul);
 }
 
-// Render tips list
+// Get difficulty badge style based on level
+function getDifficultyStyle(level) {
+    const styles = {
+        'EASY': 'bg-green-50 text-green-700 border border-green-600',
+        'MEDIUM': 'bg-yellow-50 text-yellow-700 border border-yellow-600',
+        'HARD': 'bg-red-50 text-red-700 border border-red-600',
+        'default': 'bg-gray-50 text-gray-700 border border-gray-600'
+    };
+    return styles[level] || styles.default;
+}
+
+// Format time duration for display (no change needed - already correct)
+function formatTimeDuration(timeStr) {
+    return timeStr; // Already formatted in database
+}
+
+// Updated process steps function to handle array format from API
+function processSteps(steps) {
+    // If steps is already an array, return it after validation
+    if (Array.isArray(steps)) {
+        return steps.filter(step => typeof step === 'string' && step.trim().length > 0);
+    }
+    
+    // If it's a string (legacy format), convert to array
+    if (typeof steps === 'string') {
+        try {
+            const parsed = JSON.parse(steps);
+            if (Array.isArray(parsed)) {
+                return parsed.filter(step => typeof step === 'string' && step.trim().length > 0);
+            }
+        } catch (e) {
+            console.warn('Failed to parse steps string:', e);
+        }
+    }
+    
+    // Return empty array if invalid or missing
+    return [];
+}
+
+// Process materials string into array
+function processMaterials(materialsStr) {
+    if (!materialsStr) return [];
+    return materialsStr.split(',').map(m => m.trim()).filter(m => m.length > 0);
+}
+
+// Modified renderTipsList to use updated processSteps
 function renderTipsList(tips, container) {
     if (!tips || tips.length === 0) {
         container.innerHTML = '<p class="text-gray-500">No recycling tips available</p>';
@@ -203,15 +248,73 @@ function renderTipsList(tips, container) {
     }
     
     const ul = document.createElement('ul');
-    ul.className = 'space-y-2';
+    ul.className = 'space-y-4';
     
     tips.forEach(tip => {
         const li = templates.tip.content.cloneNode(true);
-        li.querySelector('[data-tip-title]').textContent = tip.title;
-        li.querySelector('[data-tip-content]').textContent = tip.content;
+        
+        // Basic info
+        li.querySelector('[data-tip-title]').textContent = tip.title || 'Untitled Tip';
+        
+        // Difficulty level
+        const difficultySpan = li.querySelector('[data-tip-difficulty]');
+        if (difficultySpan) {
+            difficultySpan.textContent = tip.difficulty || 'EASY';
+            difficultySpan.className = `px-2 py-1 rounded-full text-xs font-medium ${getDifficultyStyle(tip.difficulty)}`;
+        }
+        
+        // Time required
+        const timeSpan = li.querySelector('[data-tip-time]');
+        if (timeSpan) {
+            timeSpan.textContent = tip.timeRequired || 'N/A';
+        }
+        
+        // Environmental impact
+        const impactSpan = li.querySelector('[data-tip-impact]');
+        if (impactSpan) {
+            impactSpan.textContent = tip.environmentalImpact || 'Not specified';
+        }
+        
+        // Materials needed
+        const materialsUl = li.querySelector('[data-tip-materials]');
+        if (materialsUl) {
+            const materials = processMaterials(tip.requiredMaterials);
+            if (materials.length > 0) {
+                materialsUl.innerHTML = '';
+                materials.forEach(material => {
+                    const materialLi = document.createElement('li');
+                    materialLi.textContent = material;
+                    materialsUl.appendChild(materialLi);
+                });
+            } else {
+                materialsUl.innerHTML = '<li class="text-gray-500">No special materials required</li>';
+            }
+        }
+        
+        // Steps handling - now handles both array and string formats
+        const stepsOl = li.querySelector('[data-tip-steps]');
+        if (stepsOl) {
+            const steps = processSteps(tip.steps);
+            if (steps && steps.length > 0) {
+                stepsOl.innerHTML = '';
+                steps.forEach((step, index) => {
+                    const stepLi = document.createElement('li');
+                    stepLi.className = 'mb-2 flex gap-2';
+                    stepLi.innerHTML = `
+                        <span class="font-medium text-green-700 shrink-0">${index + 1}.</span>
+                        <span>${step}</span>
+                    `;
+                    stepsOl.appendChild(stepLi);
+                });
+            } else {
+                stepsOl.innerHTML = '<li class="text-gray-500">No specific steps provided</li>';
+            }
+        }
+        
         ul.appendChild(li);
     });
     
+    container.innerHTML = '';
     container.appendChild(ul);
 }
 
