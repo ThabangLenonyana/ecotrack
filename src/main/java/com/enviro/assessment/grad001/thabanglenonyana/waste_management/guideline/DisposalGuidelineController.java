@@ -1,5 +1,8 @@
 package com.enviro.assessment.grad001.thabanglenonyana.waste_management.guideline;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,12 +32,19 @@ import com.enviro.assessment.grad001.thabanglenonyana.waste_management.exception
 @RestController
 @RequestMapping("/api/guidelines")
 @RequiredArgsConstructor
+@Tag(name = "Disposal Guidelines", description = "Disposal guideline management APIs")
 public class DisposalGuidelineController {
     
     // Inject the DisposalGuidelineService
     private final DisposalGuidelineService guidelineService;
 
     // Get all guidelines
+    @Operation(
+        summary = "Get all disposal guidelines",
+        description = "Retrieves a list of all disposal guidelines"
+    )
+    @ApiResponse(responseCode = "200", description = "Guidelines found successfully")
+    @ApiResponse(responseCode = "500", description = "Internal server error")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<DisposalGuidelineDTO>> getAllGuidelines() {
@@ -48,6 +58,12 @@ public class DisposalGuidelineController {
     }
 
     // Get guideline by ID
+    @Operation(
+        summary = "Get disposal guideline by ID",
+        description = "Retrieves a specific disposal guideline using its ID"
+    )
+    @ApiResponse(responseCode = "200", description = "Guideline found")
+    @ApiResponse(responseCode = "404", description = "Guideline not found")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<DisposalGuidelineDTO> getGuidelineById(@PathVariable Long id) {
@@ -61,6 +77,13 @@ public class DisposalGuidelineController {
     }
 
     // Create guideline 
+    @Operation(
+        summary = "Create new disposal guideline",
+        description = "Creates a new disposal guideline"
+    )
+    @ApiResponse(responseCode = "201", description = "Guideline created successfully")
+    @ApiResponse(responseCode = "400", description = "Invalid input")
+    @ApiResponse(responseCode = "409", description = "Guideline already exists")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<DisposalGuidelineDTO> createGuideline(@Valid @RequestBody DisposalGuidelineDTO guidelineDTO) {
@@ -77,6 +100,12 @@ public class DisposalGuidelineController {
     }
 
     // Assign guideline to category
+    @Operation(
+        summary = "Assign guideline to category",
+        description = "Assigns a disposal guideline to a waste category"
+    )
+    @ApiResponse(responseCode = "200", description = "Guideline assigned successfully")
+    @ApiResponse(responseCode = "404", description = "Guideline or category not found")
     @PatchMapping("/{guidelineId}/assign/{categoryId}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<DisposalGuidelineDTO> assignToCategory(

@@ -1,5 +1,8 @@
 package com.enviro.assessment.grad001.thabanglenonyana.waste_management.category;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +32,7 @@ import com.enviro.assessment.grad001.thabanglenonyana.waste_management.exception
 @RestController
 @RequestMapping("/api/categories")
 @RequiredArgsConstructor
+@Tag(name = "Waste Categories", description = "Waste category management APIs")
 public class WasteCategoryController {
 
     private static final Logger log = LoggerFactory.getLogger(WasteCategoryController.class);
@@ -37,6 +41,12 @@ public class WasteCategoryController {
     private final WasteCategoryService wasteCategoryService;
 
     // Get all categories
+    @Operation(
+        summary = "Get all waste categories",
+        description = "Retrieves a list of all waste categories in the system"
+    )
+    @ApiResponse(responseCode = "200", description = "Categories found successfully")
+    @ApiResponse(responseCode = "500", description = "Internal server error")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<WasteCategoryDTO>> getAllCategories() {
@@ -53,6 +63,12 @@ public class WasteCategoryController {
     }
 
     // Get category by ID
+    @Operation(
+        summary = "Get waste category by ID",
+        description = "Retrieves a specific waste category using its ID"
+    )
+    @ApiResponse(responseCode = "200", description = "Category found")
+    @ApiResponse(responseCode = "404", description = "Category not found")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<WasteCategoryDTO> getCategoryById(@PathVariable Long id) {
@@ -69,6 +85,13 @@ public class WasteCategoryController {
     }
 
     // Create category
+    @Operation(
+        summary = "Create new waste category",
+        description = "Creates a new waste category in the system"
+    )
+    @ApiResponse(responseCode = "201", description = "Category created successfully")
+    @ApiResponse(responseCode = "400", description = "Invalid input")
+    @ApiResponse(responseCode = "409", description = "Category already exists")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<WasteCategoryDTO> createCategory(@Valid @RequestBody WasteCategoryDTO categoryDTO) {
@@ -89,6 +112,13 @@ public class WasteCategoryController {
     }
 
     // Update category
+    @Operation(
+        summary = "Update waste category",
+        description = "Updates an existing waste category"
+    )
+    @ApiResponse(responseCode = "200", description = "Category updated successfully")
+    @ApiResponse(responseCode = "404", description = "Category not found")
+    @ApiResponse(responseCode = "400", description = "Invalid input")
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<WasteCategoryDTO> updateCategory(@PathVariable Long id, @Valid @RequestBody WasteCategoryDTO categoryDTO) {
@@ -109,6 +139,12 @@ public class WasteCategoryController {
     }
 
     // Delete category
+    @Operation(
+        summary = "Delete waste category",
+        description = "Deletes an existing waste category"
+    )
+    @ApiResponse(responseCode = "204", description = "Category deleted successfully")
+    @ApiResponse(responseCode = "404", description = "Category not found")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {

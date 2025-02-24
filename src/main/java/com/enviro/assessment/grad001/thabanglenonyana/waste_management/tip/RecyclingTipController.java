@@ -1,5 +1,8 @@
 package com.enviro.assessment.grad001.thabanglenonyana.waste_management.tip;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,11 +33,18 @@ import com.enviro.assessment.grad001.thabanglenonyana.waste_management.exception
 @RestController
 @RequestMapping("/api/tips")
 @RequiredArgsConstructor
+@Tag(name = "Recycling Tips", description = "Recycling tip management APIs")
 public class RecyclingTipController {
     
     private final RecyclingTipService tipService;
 
     // Get all recycling tips
+    @Operation(
+        summary = "Get all recycling tips",
+        description = "Retrieves a list of all recycling tips"
+    )
+    @ApiResponse(responseCode = "200", description = "Tips found successfully")
+    @ApiResponse(responseCode = "500", description = "Internal server error")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<RecyclingTipDTO>> getAllRecyclingTips() {
@@ -47,6 +57,12 @@ public class RecyclingTipController {
     }
 
     // Get recycling tip by ID
+    @Operation(
+        summary = "Get recycling tip by ID",
+        description = "Retrieves a specific recycling tip using its ID"
+    )
+    @ApiResponse(responseCode = "200", description = "Tip found")
+    @ApiResponse(responseCode = "404", description = "Tip not found")
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<RecyclingTipDTO> findById(@PathVariable Long id) {
@@ -59,6 +75,13 @@ public class RecyclingTipController {
     }
 
     // Create recycling tip
+    @Operation(
+        summary = "Create new recycling tip",
+        description = "Creates a new recycling tip"
+    )
+    @ApiResponse(responseCode = "201", description = "Tip created successfully")
+    @ApiResponse(responseCode = "400", description = "Invalid input")
+    @ApiResponse(responseCode = "409", description = "Tip already exists")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<RecyclingTipDTO> create(@Valid @RequestBody RecyclingTipDTO tipDTO) {
