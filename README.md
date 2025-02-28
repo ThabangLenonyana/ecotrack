@@ -19,9 +19,9 @@ A Spring Boot REST API for the Enviro365 waste sorting mobile application, desig
 - [Setup and Installation](#setup-and-installation)
 
 
-## Technologies Used
+## Dependencies
 - Java 17
-- Spring Boot 3.x
+- Spring Boot 3.4.2
 - Spring Data JPA
 - H2 Database
 - Maven
@@ -29,30 +29,35 @@ A Spring Boot REST API for the Enviro365 waste sorting mobile application, desig
 - Lombok
 
 ## Project Structure
-```
+```md
 src/
 ├── main/
 │   ├── java/
 │   │   └── com/enviro/assessment/grad001/thabanglenonyana/
 │   │       ├── Application.java
 │   │       ├── category/
-│   │       │   └── (Waste Category Layers)
+│   │       │   └── (**Waste Category Layers**)
 │   │       ├── guideline/
-│   │       │   └── (Disposal Guidline Layers)
+│   │       │   └── (**Disposal Guidline Layers**)
 │   │       ├── tip/
-│   │       │   └── (Recycling Tip Layers)
+│   │       │   └── (**Recycling Tip Layers**)
 │   │       └── exception/
 │   │           └── (Custom exceptions)
 │   └── resources/
-│       ├── application.properties
-│       ├── 1-schema.sql 
-|       └── 2-data.sql 
+│        ├── static/ 
+│        |   ├── components
+│        |   ├── js
+│        |   ├── pages
+│        |   └── css
+│        ├── application.properties
+│        ├── 1-schema.sql 
+|        └── 2-data.sql 
 └── test/
-    └── java/
-        └── com/enviro/assessment/grad001/thabanglenonyana/
-            └── waste_management/
-│               ├── WasteCategoryTest.java           
-│               ├── DisposalGuidelineTest.java       
+│    └── java/
+│        └── com/enviro/assessment/grad001/thabanglenonyana/
+│            └── waste_management/
+│               ├── WasteCategoryTest.java          
+│               ├── DisposalGuidelineTest.java      
 │               └── RecyclingTipTest.java           
 ```
 
