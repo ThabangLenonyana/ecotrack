@@ -1,3 +1,4 @@
+
 -- Create waste categories table with relationships
 CREATE TABLE IF NOT EXISTS waste_categories (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
