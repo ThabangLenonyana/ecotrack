@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 import { DisposalGuideline } from '../models/disposal-guideline';
 import { RecyclingTip } from '../models/recycling-tip';
 import { WasteCategory } from '../models/waste-category';
@@ -9,7 +10,7 @@ import { WasteCategory } from '../models/waste-category';
   providedIn: 'root'
 })
 export class ApiService {
-  private readonly API_URL = 'http://localhost:8080/api';
+  private readonly API_URL = environment.apiUrl
   
   constructor(private http: HttpClient) { }
 
