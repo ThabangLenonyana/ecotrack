@@ -1,0 +1,104 @@
+<div id="overview" class="space-y-6">
+  <!-- Stats Container -->
+  <div class="stats-container">
+    <h2 class="text-xl font-semibold mb-4">Dashboard Overview</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <!-- Stats Cards -->
+      <ng-container *ngIf="!loading.stats; else loadingStats">
+        <div *ngFor="let stat of stats" class="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-2xl font-bold">{{ stat.count }}</h3>
+              <p class="text-sm text-gray-600">{{ stat.label }}</p>
+            </div>
+            <div class="icon-container">
+              <i [class]="stat.icon"></i>
+            </div>
+          </div>
+          <div class="mt-2 flex items-center text-sm">
+            <i class="fas fa-arrow-up mr-1 text-green-500"></i>
+            <span class="text-green-500">{{ stat.increase }}%</span>
+            <span class="text-gray-500 ml-1">from last month</span>
+          </div>
+        </div>
+      </ng-container>
+      
+      <!-- Loading State for Stats -->
+      <ng-template #loadingStats>
+        <div *ngFor="let i of [1,2,3,4]" class="bg-white p-4 rounded-lg shadow animate-pulse">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="h-7 bg-gray-200 rounded w-16"></div>
+              <div class="h-4 bg-gray-200 rounded w-24 mt-2"></div>
+            </div>
+            <div class="icon-container-skeleton"></div>
+          </div>
+          <div class="mt-2 flex items-center">
+            <div class="h-4 bg-gray-200 rounded w-32"></div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+  
+  <!-- Activity and Actions Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Recent Activity -->
+    <div class="bg-white p-6 rounded-lg shadow">
+      <h3 class="text-lg font-semibold mb-4 flex items-center">
+        <i class="fas fa-history text-gray-600 mr-2"></i>
+        Recent Activity
+      </h3>
+      
+      <div class="space-y-4">
+        <!-- Activity Items -->
+        <ng-container *ngIf="!loading.activities; else loadingActivities">
+          <div *ngIf="recentActivities.length === 0" class="text-gray-500 text-center py-4">
+            No recent activity
+          </div>
+          
+          <div *ngFor="let activity of recentActivities" class="flex items-center space-x-3">
+            <div [class]="'w-2 h-2 bg-' + activity.color + '-500 rounded-full'"></div>
+            <p class="text-sm text-gray-600 flex-grow">{{ activity.description }}</p>
+            <span class="text-xs text-gray-400">{{ activity.timeAgo }}</span>
+          </div>
+        </ng-container>
+        
+        <!-- Loading State for Activities -->
+        <ng-template #loadingActivities>
+          <div *ngFor="let i of [1,2,3,4]" class="flex items-center space-x-3 animate-pulse">
+            <div class="w-2 h-2 bg-gray-300 rounded-full"></div>
+            <div class="h-4 bg-gray-200 rounded flex-grow"></div>
+            <div class="h-3 bg-gray-200 rounded w-16"></div>
+          </div>
+        </ng-template>
+      </div>
+      
+      <div class="mt-4 text-right">
+        <button class="text-sm text-green-600 hover:text-green-800 font-medium transition-colors">
+          View All Activity
+        </button>
+      </div>
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="bg-white p-6 rounded-lg shadow">
+      <h3 class="text-lg font-semibold mb-4 flex items-center">
+        <i class="fas fa-bolt text-gray-600 mr-2"></i>
+        Quick Actions
+      </h3>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <!-- Action Buttons -->
+        <div *ngFor="let action of quickActions" 
+             [routerLink]="action.route"
+             (click)="navigateTo(action.action, action.route)"
+             class="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-left cursor-pointer">
+          <i [class]="action.icon + ' text-' + action.color + '-600 mb-2'"></i>
+          <h4 class="font-medium">{{ action.label }}</h4>
+          <p class="text-sm text-gray-500">{{ action.description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,240 @@
+<div class="section-card p-6">
+  <!-- Header with title and add button -->
+  <div class="flex justify-between items-center mb-6">
+    <div class="flex items-center space-x-3">
+      <i class="fas fa-book text-blue-600 text-xl"></i>
+      <h2 class="text-xl font-semibold text-gray-900">Disposal Guidelines</h2>
+      <span class="bg-gray-100 text-gray-600 text-sm px-2 py-1 rounded-full">
+        {{ guidelines.length }} {{ guidelines.length === 1 ? 'guideline' : 'guidelines' }}
+      </span>
+    </div>
+    <div class="flex items-center space-x-4">
+      <button (click)="openAddModal()" 
+              class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors flex items-center space-x-2">
+        <i class="fas fa-plus"></i>
+        <span>Add</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Data Table Component with fixed width -->
+  <div class="w-full">
+    <app-data-table
+      [config]="tableConfig"
+      [data]="guidelines"
+      [loading]="loading"
+      [searchTerm]="searchTerm"
+      (search)="onSearch($event)"
+      noDataMessage="No guidelines found"
+      emptyStateIcon="fas fa-book-open"
+      loadingIcon="fas fa-circle-notch fa-spin">
+
+      <!-- Custom empty state template -->
+      <ng-template #emptyStateTemplate>
+        <div class="text-center py-16">
+          <i class="fas fa-book-open text-gray-400 text-5xl mb-4"></i>
+          <h3 class="text-xl font-medium text-gray-700 mb-2">No guidelines found</h3>
+          <p class="text-gray-500 mb-6">Get started by creating disposal guidelines</p>
+          <button (click)="openAddModal()" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+            Create Guideline
+          </button>
+        </div>
+      </ng-template>
+
+      <!-- Custom cell template for title with truncation -->
+      <ng-template #titleTemplate let-item>
+        <div class="max-w-full">
+          <p class="title-cell" title="{{ item.title }}">
+            {{ item.title }}
+          </p>
+        </div>
+      </ng-template>
+
+      <!-- Custom cell template for instructions with truncation -->
+      <ng-template #instructionsTemplate let-item>
+        <div class="max-w-full">
+          <p class="text-gray-600 truncate" title="{{ item.instructions }}">
+            {{ item.instructions }}
+          </p>
+        </div>
+      </ng-template>
+
+      <!-- Custom cell template for category -->
+      <ng-template #categoryTemplate let-item>
+        <div class="w-full flex justify-center">
+          <span *ngIf="item.categoryId" 
+                class="category-badge assigned">
+            <i class="fas fa-tag mr-1"></i>
+            {{ getCategoryNameById(item.categoryId) }}
+          </span>
+          <span *ngIf="!item.categoryId" 
+                class="category-badge unassigned">
+            <i class="fas fa-times-circle mr-1"></i>
+            Unassigned
+          </span>
+        </div>
+      </ng-template>
+
+      <!-- Actions Template -->
+      <ng-template #actionsTemplate let-item>
+        <div class="w-full flex justify-left">
+          <app-table-actions 
+            [actions]="tableActions" 
+            [item]="item"
+            (actionClick)="onActionClick($event)">
+          </app-table-actions>
+        </div>
+      </ng-template>
+    </app-data-table>
+  </div>
+
+  <!-- Form Modal for Add/Edit -->
+  <app-form-modal *ngIf="showFormModal"
+    [title]="isEditMode ? 'Edit Guideline' : 'Add New Guideline'"
+    [submitButtonText]="isEditMode ? 'Save Changes' : 'Create Guideline'"
+    [isSubmitDisabled]="guidelineForm.invalid"
+    icon="fas fa-book"
+    colorClass="from-blue-500 to-blue-600"
+    (close)="closeFormModal()"
+    (submit)="onFormSubmit()">
+    
+    <div form-content>
+      <form [formGroup]="guidelineForm" class="space-y-6">
+        <div>
+          <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
+            Guideline Title
+          </label>
+          <div class="relative">
+            <input type="text" 
+                   id="title" 
+                   formControlName="title" 
+                   class="block w-full rounded-lg border-2 border-gray-300 shadow-sm 
+                          focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
+                          hover:border-gray-400 
+                          pl-10 py-3 bg-white
+                          transition-colors"
+                   [ngClass]="{'border-red-300': guidelineForm.get('title')?.invalid && guidelineForm.get('title')?.touched}"
+                   placeholder="Enter guideline title">
+            <i class="fas fa-heading absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"></i>
+          </div>
+          <div *ngIf="guidelineForm.get('title')?.invalid && guidelineForm.get('title')?.touched" class="mt-1">
+            <span *ngIf="guidelineForm.get('title')?.errors?.['required']" class="text-red-500 text-sm">
+              Title is required
+            </span>
+            <span *ngIf="guidelineForm.get('title')?.errors?.['minlength']" class="text-red-500 text-sm">
+              Title must be at least 3 characters
+            </span>
+          </div>
+        </div>
+
+        <div>
+          <label for="instructions" class="block text-sm font-medium text-gray-700 mb-2">
+            Instructions
+          </label>
+          <div class="relative">
+            <textarea id="instructions" 
+                    formControlName="instructions" 
+                    rows="4" 
+                    class="block w-full rounded-lg border-2 border-gray-300 shadow-sm 
+                          focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                          hover:border-gray-400
+                          pl-10 py-3 bg-white
+                          transition-colors"
+                    [ngClass]="{'border-red-300': guidelineForm.get('instructions')?.invalid && guidelineForm.get('instructions')?.touched}"
+                    placeholder="Enter guideline instructions"></textarea>
+            <i class="fas fa-align-left absolute left-3 top-4 text-gray-500"></i>
+          </div>
+          <div *ngIf="guidelineForm.get('instructions')?.invalid && guidelineForm.get('instructions')?.touched" class="mt-1">
+            <span *ngIf="guidelineForm.get('instructions')?.errors?.['required']" class="text-red-500 text-sm">
+              Instructions are required
+            </span>
+            <span *ngIf="guidelineForm.get('instructions')?.errors?.['minlength']" class="text-red-500 text-sm">
+              Instructions must be at least 10 characters
+            </span>
+          </div>
+        </div>
+
+        <div>
+          <label for="categoryId" class="block text-sm font-medium text-gray-700 mb-2">
+            Assigned Category (Optional)
+          </label>
+          <div class="relative">
+            <select id="categoryId" 
+                   formControlName="categoryId" 
+                   class="block w-full rounded-lg border-2 border-gray-300 shadow-sm 
+                          focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
+                          hover:border-gray-400 
+                          pl-10 py-3 bg-white
+                          transition-colors appearance-none">
+              <option value="">Select Category (Optional)</option>
+              <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+            </select>
+            <i class="fas fa-folder absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"></i>
+            <i class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"></i>
+          </div>
+        </div>
+      </form>
+    </div>
+  </app-form-modal>
+
+  <!-- Assign Category Modal -->
+  <app-form-modal *ngIf="showAssignModal"
+    title="Assign to Category"
+    submitButtonText="Save Assignment"
+    [isSubmitDisabled]="assignForm.invalid"
+    icon="fas fa-link"
+    colorClass="from-green-500 to-green-600"
+    (close)="closeAssignModal()"
+    (submit)="onAssignSubmit()">
+    
+    <div form-content>
+      <div class="mb-6">
+        <h3 class="text-lg font-medium text-gray-900">
+          Assigning: <span class="font-bold text-blue-600">{{ guidelineToAssign?.title }}</span>
+        </h3>
+        <p class="text-sm text-gray-600 mt-1">Select a category to assign this guideline to</p>
+      </div>
+
+      <form [formGroup]="assignForm" class="space-y-6">
+        <div>
+          <label for="assign-category" class="block text-sm font-medium text-gray-700 mb-2">
+            Category
+          </label>
+          <div class="relative">
+            <select id="assign-category" 
+                   formControlName="categoryId" 
+                   class="block w-full rounded-lg border-2 border-gray-300 shadow-sm 
+                          focus:ring-2 focus:ring-green-500 focus:border-green-500 
+                          hover:border-gray-400 
+                          pl-10 py-3 bg-white
+                          transition-colors appearance-none"
+                   [ngClass]="{'border-red-300': assignForm.get('categoryId')?.invalid && assignForm.get('categoryId')?.touched}">
+              <option value="">Select a Category</option>
+              <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+            </select>
+            <i class="fas fa-folder absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"></i>
+            <i class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"></i>
+          </div>
+          <div *ngIf="assignForm.get('categoryId')?.invalid && assignForm.get('categoryId')?.touched" class="mt-1">
+            <span *ngIf="assignForm.get('categoryId')?.errors?.['required']" class="text-red-500 text-sm">
+              Please select a category
+            </span>
+          </div>
+        </div>
+      </form>
+    </div>
+  </app-form-modal>
+
+  <!-- Confirm Delete Modal -->
+  <app-confirm-modal *ngIf="showDeleteModal"
+    title="Delete Guideline"
+    [message]="'Are you sure you want to delete the guideline &quot;' + (guidelineToDelete?.title || '') + '&quot;? This action cannot be undone.'"
+    confirmButtonText="Delete"
+    cancelButtonText="Cancel"
+    confirmButtonClass="bg-red-500 hover:bg-red-600"
+    icon="fas fa-exclamation-triangle"
+    iconClass="text-red-500"
+    (confirm)="onDeleteConfirm()"
+    (cancel)="closeDeleteModal()">
+  </app-confirm-modal>
+</div>

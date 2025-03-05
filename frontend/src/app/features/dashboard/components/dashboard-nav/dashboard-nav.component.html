@@ -1,0 +1,37 @@
+<div class="mt-6 overflow-x-auto pb-2">
+  <nav class="flex justify-between items-center">
+    <!-- Left side navigation items -->
+    <div class="flex space-x-1 min-w-max">
+      <ng-container *ngFor="let item of navItems; let last = last">
+        <a [routerLink]="item.href" 
+           routerLinkActive="tab-active"
+           [routerLinkActiveOptions]="{exact: item.href === '/dashboard/overview'}"
+           class="dashboard-tab group inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg">
+          <i [class]="item.icon + ' mr-2 text-lg'"></i>
+          <span>{{item.label}}</span>
+          <div class="tab-indicator"></div>
+        </a>
+        <div *ngIf="!last" class="h-6 border-r border-gray-100 mx-1 self-center"></div>
+      </ng-container>
+    </div>
+    
+    <!-- Right side user profile and settings -->
+    <div class="user-section flex items-center space-x-1">
+      <!-- Profile Button -->
+      <a class="dashboard-tab group inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg">
+        <i class="fas fa-user mr-2 text-lg"></i>
+        <span>Profile</span>
+        <div class="tab-indicator"></div>
+      </a>
+      
+      <div class="h-6 border-r border-gray-100 mx-1 self-center"></div>
+      
+      <!-- Settings Button -->
+      <a class="dashboard-tab group inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg">
+        <i class="fas fa-cog mr-2 text-lg"></i>
+        <span>Settings</span>
+        <div class="tab-indicator"></div>
+      </a>
+    </div>
+  </nav>
+</div>

@@ -1,0 +1,18 @@
+
+<div class="flex items-center">
+  <ng-container *ngFor="let action of actions; let i = index">
+    <ng-container *ngIf="isVisible(action)">
+      <button 
+        [class]="getButtonClass(action)"
+        [title]="action.tooltip || action.label || action.name"
+        [disabled]="isDisabled(action)"
+        (click)="onClick(action)">
+        <i [class]="action.icon"></i>
+      </button>
+      
+      <div *ngIf="showDividers && i < actions.length - 1 && isVisible(actions[i+1])" 
+           class="w-px h-4 bg-gray-200 mx-1">
+      </div>
+    </ng-container>
+  </ng-container>
+</div>

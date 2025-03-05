@@ -1,0 +1,56 @@
+.section-card {
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+}
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+:host ::ng-deep {
+  // Style the badges
+  .inline-flex.items-center.rounded-full {
+    transition: all 0.2s ease;
+    
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+  // Make sure buttons have nice hover effects
+  button.bg-green-500 {
+    transition: all 0.2s ease;
+    
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  // Enhance form inputs
+  input:focus, textarea:focus {
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+  }
+}
+
+::ng-deep .table-fixed {
+  table-layout: fixed !important;
+}
+
+::ng-deep .truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}

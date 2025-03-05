@@ -1,0 +1,23 @@
+:host {
+    display: inline-block;
+  }
+  
+  button {
+    transition: all 0.2s ease;
+    
+    &:not([disabled]):hover {
+      transform: translateY(-1px);
+      
+      i {
+        transform: scale(1.1);
+      }
+    }
+    
+    &:not([disabled]):active {
+      transform: translateY(0);
+    }
+    
+    i {
+      transition: transform 0.2s ease;
+    }
+  }

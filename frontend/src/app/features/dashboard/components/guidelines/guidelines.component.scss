@@ -1,0 +1,85 @@
+.section-card {
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+}
+
+:host ::ng-deep {
+  // Title styles
+  .title-cell {
+    color: #1f2937; // text-gray-800
+    font-weight: 700; // font-bold
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  // Category badge styles
+  .category-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all 0.2s;
+
+    &.assigned {
+      background-color: #dcfce7; // bg-green-100
+      color: #166534; // text-green-800
+      border: 2px solid #bbf7d0; // border-green-200
+      
+      &:hover {
+        background-color: #bbf7d0; // bg-green-200
+      }
+    }
+
+    &.unassigned {
+      background-color: #f1f5f9; // bg-slate-100
+      color: #475569; // text-slate-600
+      border: 2px solid #e2e8f0; // border-slate-200
+      
+      &:hover {
+        background-color: #e2e8f0; // bg-slate-200
+      }
+    }
+  }
+
+  // Style the badges
+  .inline-flex.items-center.rounded-full {
+    transition: all 0.2s ease;
+    
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+
+  // Make sure buttons have nice hover effects
+  button.bg-blue-500 {
+    transition: all 0.2s ease;
+    
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  // Style the select dropdowns
+  select {
+    background-image: none; // Remove default arrow
+    
+    &:focus {
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    }
+  }
+}

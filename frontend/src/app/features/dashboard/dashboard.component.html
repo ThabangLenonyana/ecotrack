@@ -1,0 +1,23 @@
+<!-- Green Background for entire dashboard -->
+<div class="dashboard-bg animated-gradient animated-shapes">
+  <div id="particles-js" class="absolute inset-0 z-0"></div>
+</div>
+
+<!-- Dashboard Header - Header background is now handled in the dashboard-header component -->
+<div class="dashboard-header" >
+  <app-dashboard-header></app-dashboard-header>
+</div>
+
+
+<!-- Main Content -->
+<main class="content-container py-6 relative z-10 bg-gray-50">
+  <router-outlet></router-outlet>
+</main>
+
+<!-- Modal Container -->
+<div id="modal-container" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden flex items-center justify-center z-[100]">
+  <!-- Modal content will be inserted here -->
+</div>
+
+<!-- Toast Container -->
+<div id="toast-container" class="fixed bottom-4 right-4 z-50"></div>

@@ -1,0 +1,39 @@
+<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[60]">
+  <div class="bg-white rounded-2xl shadow-xl max-w-md w-full mx-4 overflow-hidden relative z-[70]">
+    <!-- Header -->
+    <div [class]="'bg-gradient-to-r ' + colorClass + ' p-6 text-white'">
+      <div class="flex justify-between items-start">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center">
+            <i [class]="icon + ' text-2xl'"></i>
+          </div>
+          <h2 class="text-2xl font-bold">{{ title }}</h2>
+        </div>
+        <button class="p-2 hover:bg-white/10 rounded-lg transition-colors" (click)="onClose()">
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Form Content -->
+    <div class="p-6">
+      <ng-content select="[form-content]"></ng-content>
+      
+      <div class="mt-8 flex justify-end space-x-3">
+        <button type="button" 
+                (click)="onClose()"
+                class="px-4 py-2 border rounded-lg text-gray-700 hover:bg-gray-50 
+                       transition-colors flex items-center space-x-2">
+          <i class="fas fa-times"></i>
+          <span>{{ cancelButtonText }}</span>
+        </button>
+        <button type="button"
+                [disabled]="isSubmitDisabled"
+                (click)="onSubmit()"
+                [class]="'px-4 py-2 text-white rounded-lg transition-colors flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed ' + submitButtonClass">
+          <i class="fas fa-save"></i>
+          <span>{{ submitButtonText }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
