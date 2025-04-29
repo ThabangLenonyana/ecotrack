@@ -63,3 +63,35 @@ INSERT INTO recycling_tips (title, steps, difficulty, environmental_impact, time
      '45 minutes',
      'Clean cans, sandpaper, paint, brushes',
      5, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());
+
+MERGE INTO recycling_locations (
+    id, latitude, longitude, name, municipality, city, type, operation,
+    group_name, website, other, accepts_cans, accepts_cardboard, accepts_cartons,
+    is_dropoff_site, accepts_ewaste, accepts_metal, accepts_motor_oil,
+    is_paid, accepts_paper, accepts_plastic, created_at, updated_at
+)
+SELECT 
+    CAST(ID AS BIGINT),
+    CAST(LATITUDE AS DOUBLE),  
+    CAST(LONGITUDE AS DOUBLE),
+    NAME,
+    MUNICIPALITY,
+    CITY,
+    TYPE,
+    OPERATION,
+    GROUP_NAME,
+    WEBSITE,
+    OTHER,
+    CASE WHEN CAN_TIN = 'y' THEN TRUE WHEN CAN_TIN = 'n' THEN FALSE ELSE NULL END,
+    CASE WHEN CARD = 'y' THEN TRUE WHEN CARD = 'n' THEN FALSE ELSE NULL END,
+    CASE WHEN CARTON = 'y' THEN TRUE WHEN CARTON = 'n' THEN FALSE ELSE NULL END,
+    CASE WHEN DROPOFFSIT = 'yes' THEN TRUE WHEN DROPOFFSIT = 'n' THEN FALSE ELSE NULL END,
+    CASE WHEN EWASTE = 'y' THEN TRUE WHEN EWASTE = 'n' THEN FALSE ELSE NULL END,
+    CASE WHEN METAL = 'y' THEN TRUE WHEN METAL = 'n' THEN FALSE ELSE NULL END,
+    CASE WHEN O_MOTOROIL = 'y' THEN TRUE WHEN O_MOTOROIL = 'n' THEN FALSE ELSE NULL END,
+    CASE WHEN PAID = 'yes' THEN TRUE WHEN PAID = 'n' THEN FALSE ELSE NULL END,
+    CASE WHEN PAPER = 'y' THEN TRUE WHEN PAPER = 'n' THEN FALSE ELSE NULL END,
+    CASE WHEN PLASTIC = 'y' THEN TRUE WHEN PLASTIC = 'n' THEN FALSE ELSE NULL END,
+    CURRENT_TIMESTAMP(),
+    CURRENT_TIMESTAMP()
+FROM CSVREAD('classpath:mapData.csv', 'ID,LATITUDE,LONGITUDE,NAME,MUNICIPALITY,CITY,TYPE,OPERATION,GROUP_NAME,WEBSITE,OTHER,CAN_TIN,CARD,CARTON,DROPOFFSIT,EWASTE,METAL,O_MOTOROIL,PAID,PAPER,PLASTIC', 'charset=UTF-8 fieldSeparator=,');
