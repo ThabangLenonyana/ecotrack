@@ -7,8 +7,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.globe.min.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBEQpt-X72rXbp2aZ86XVhekqeD-lpytEU&loading=async&callback=initMap&libraries=marker" async></script>
+  <script>
+    // initMap function that will be called when the API is loaded
+    async function initMap() {
+      // Import the maps and marker libraries
+      const { Map } = await google.maps.importLibrary("maps");
+      const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+      // Rest of the map initialization code will be handled by your application components
+    }
+  </script>
 </head>
 <body>
   <app-root></app-root>

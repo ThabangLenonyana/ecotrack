@@ -1,0 +1,179 @@
+// features/map/components/facility-map/facility-map.component.scss
+.map-container {
+  position: relative;
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.map-header {
+  background-color: #16a34a;
+  color: white;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+}
+
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  
+  .spinner {
+    text-align: center;
+    color: #16a34a;
+    
+    i {
+      margin-bottom: 1rem;
+    }
+    
+    p {
+      font-weight: 500;
+    }
+  }
+}
+
+.map-legend {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background-color: white;
+  padding: 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 5;
+  
+  h3 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    
+    .legend-icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      
+      &.recycling {
+        background-color: #4CAF50;
+        border-radius: 50%;
+      }
+      
+      &.waste {
+        background-color: #FF5722;
+        border-radius: 50%;
+      }
+      
+      &.dropoff {
+        background-color: #2196F3;
+        border-radius: 50%;
+      }
+      
+      &.buyback {
+        background-color: #9C27B0;
+        border-radius: 50%;
+      }
+    }
+    
+    span {
+      font-size: 0.8rem;
+      color: #555;
+    }
+  }
+}
+
+// Marker animation for newly loaded markers
+@keyframes markerPulse {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+// Enhanced styling for marker icons
+.marker-icon {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease;
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    opacity: 0;
+    animation: pulse 2s infinite;
+    pointer-events: none;
+    z-index: -1;
+  }
+}
+
+// Pulsing animation for marker focus
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(1.1);
+    opacity: 0;
+  }
+}
+
+::ng-deep .gm-style .gm-style-iw-c {
+  padding: 12px !important;
+  
+  .info-window {
+    h3 {
+      margin-top: 0;
+      margin-bottom: 8px;
+      color: #16a34a;
+      font-weight: 600;
+    }
+    
+    p {
+      margin: 5px 0;
+      font-size: 0.9rem;
+      color: #333;
+    }
+  }
+}

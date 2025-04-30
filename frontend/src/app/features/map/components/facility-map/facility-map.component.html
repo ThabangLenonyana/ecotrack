@@ -1,0 +1,26 @@
+<!-- features/map/components/facility-map/facility-map.component.html -->
+<div class="map-container">
+  <div class="map-header">
+    <h2>Recycling & Waste Facilities in Gauteng</h2>
+  </div>
+
+  <!-- Loading Indicator -->
+  <div *ngIf="isLoading" class="loading-overlay">
+    <div class="spinner">
+      <i class="fas fa-circle-notch fa-spin fa-3x"></i>
+      <p>Loading facilities...</p>
+    </div>
+  </div>
+
+  <!-- Map Component -->
+  <google-map 
+    height="600px"
+    width="100%"
+    [center]="center"
+    [zoom]="zoom"
+    [options]="mapOptions"
+    (mapInitialized)="onMapInitialized($event)">
+  </google-map>
+
+  
+</div>
