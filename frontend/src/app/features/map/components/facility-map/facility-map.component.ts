@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { MarkerClusterer, GridAlgorithm } from '@googlemaps/markerclusterer';
@@ -16,20 +16,34 @@ declare var google: any;
   templateUrl: './facility-map.component.html',
   styleUrls: ['./facility-map.component.scss']
 })
-export class FacilityMapComponent implements OnInit {
-  // Output event to emit selected facility
+export class FacilityMapComponent implements OnInit, OnChanges {
+  @Input() activeFilters: any = {
+    types: [],
+    materials: [],
+    radius: null,
+    sortBy: null,
+    userLocation: null
+  };
+
+  @Input() facilities: RecyclingFacility[] = [];
+  
   @Output() facilitySelected = new EventEmitter<RecyclingFacility>();
   
   // Default center is Gauteng
   center: google.maps.LatLngLiteral = { lat: -26.2041, lng: 28.0473 };
   zoom = 8.5;
   markers: google.maps.marker.AdvancedMarkerElement[] = [];
-  facilities: RecyclingFacility[] = [];
+  filteredFacilities: RecyclingFacility[] = [];
   isLoading = true;
   mapOptions: google.maps.MapOptions = {
     mapId: '447a24cd5b049c0e',
     mapTypeId: google.maps.MapTypeId.ROADMAP,
     zoomControl: true,
+    zoomControlOptions: {
+      position: google.maps.ControlPosition.LEFT_BOTTOM,
+    },
+    fullscreenControl: false,
+    mapTypeControl: false,
     scrollwheel: true,
     disableDoubleClickZoom: true,
     maxZoom: 15,
@@ -38,12 +52,148 @@ export class FacilityMapComponent implements OnInit {
   private map!: google.maps.Map;
   private clusterer!: MarkerClusterer;
   private zoomThreshold = 13; // Zoom level at which clustering is disabled
-  private mapFullyInitialized = false;
+  private userLocationMarker: google.maps.Marker | null = null;
 
   constructor(private facilityService: FacilityService) {}
 
   ngOnInit(): void {
-    this.loadFacilities();
+    // Only load all facilities if we don't have any provided
+    if (this.facilities.length === 0) {
+      this.loadFacilities();
+    } else {
+      this.filteredFacilities = [...this.facilities];
+      this.createMarkers();
+    }
+  }
+  
+  ngOnChanges(changes: SimpleChanges): void {
+    // Handle direct facilities updates from location toggle
+    if (changes['facilities'] && !changes['facilities'].firstChange) {
+      this.filteredFacilities = [...this.facilities];
+      this.updateMarkers();
+    }
+    
+    if (changes['activeFilters'] && !changes['activeFilters'].firstChange) {
+      // If user location is provided, center the map there
+      if (this.activeFilters.userLocation) {
+        this.centerMapOnUserLocation(
+          this.activeFilters.userLocation.latitude,
+          this.activeFilters.userLocation.longitude
+        );
+      }
+      
+      // Only apply filters if we weren't already given filtered facilities
+      if (!changes['facilities'] || changes['facilities'].firstChange) {
+        this.applyFilters();
+      }
+    }
+  }
+  
+  // Center map on user's location and adjust zoom
+  private centerMapOnUserLocation(latitude: number, longitude: number): void {
+    if (this.map) {
+      this.center = { lat: latitude, lng: longitude };
+      this.map.setCenter(this.center);
+      this.map.setZoom(11); // Closer zoom when showing user location
+
+      // Remove existing user location marker if any
+      if (this.userLocationMarker) {
+        this.userLocationMarker.setMap(null);
+      }
+      
+      // Add user location marker
+      this.userLocationMarker = new google.maps.Marker({
+        position: this.center,
+        map: this.map,
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          fillColor: '#4285F4',
+          fillOpacity: 1,
+          strokeColor: 'white',
+          strokeWeight: 2,
+          scale: 8,
+        },
+        title: 'Your location',
+        zIndex: 1000 // Ensure it's above other markers
+      });
+    }
+  }
+  
+  // Apply filters to the facilities and update markers
+  private applyFilters(): void {
+    if (this.facilities.length === 0) return;
+    
+    let filtered = [...this.facilities];
+    
+    // Filter by facility types
+    if (this.activeFilters.types && this.activeFilters.types.length > 0) {
+      filtered = filtered.filter(facility => 
+        facility.type && this.activeFilters.types.includes(facility.type.toLowerCase())
+      );
+    }
+    
+    // Filter by materials
+    if (this.activeFilters.materials && this.activeFilters.materials.length > 0) {
+      filtered = filtered.filter(facility => {
+        if (!facility.acceptedMaterials) return false;
+        
+        return this.activeFilters.materials.some((material: string) => 
+          facility.acceptedMaterials && facility.acceptedMaterials[material]
+        );
+      });
+    }
+    
+    // Filter by radius if user location is provided
+    if (this.activeFilters.userLocation && this.activeFilters.radius) {
+      const userLat = this.activeFilters.userLocation.latitude;
+      const userLng = this.activeFilters.userLocation.longitude;
+      
+      filtered = filtered.filter(facility => {
+        const distance = this.calculateDistance(
+          userLat, userLng, 
+          facility.latitude, facility.longitude
+        );
+        
+        // Store the distance for sorting later
+        facility.distance = distance;
+        return distance <= this.activeFilters.radius;
+      });
+    }
+    
+    // Sort facilities
+    if (this.activeFilters.sortBy) {
+      switch (this.activeFilters.sortBy) {
+        case 'nearest':
+          if (this.activeFilters.userLocation) {
+            filtered.sort((a, b) => (a.distance || 0) - (b.distance || 0));
+          }
+          break;
+        case 'alphabetical':
+          filtered.sort((a, b) => a.name.localeCompare(b.name));
+          break;
+      }
+    }
+    
+    this.filteredFacilities = filtered;
+    this.updateMarkers();
+  }
+  
+  // Calculate distance between two points using the Haversine formula
+  private calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+    const R = 6371; // Radius of earth in km
+    const dLat = this.deg2rad(lat2 - lat1);
+    const dLon = this.deg2rad(lon2 - lon1);
+    const a = 
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) * 
+      Math.sin(dLon/2) * Math.sin(dLon/2); 
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    const d = R * c; // Distance in km
+    return d;
+  }
+  
+  private deg2rad(deg: number): number {
+    return deg * (Math.PI/180)
   }
 
   async onMapInitialized(map: google.maps.Map) {
@@ -104,6 +254,8 @@ export class FacilityMapComponent implements OnInit {
     this.facilityService.getAllFacilities().subscribe({
       next: async (data) => {
         this.facilities = data;
+        this.filteredFacilities = [...data]; // Initially show all facilities
+        
         // Ensure the marker library is loaded before creating markers
         await google.maps.importLibrary("marker");
         this.createMarkers();
@@ -119,14 +271,26 @@ export class FacilityMapComponent implements OnInit {
       }
     });
   }
+  
+  // Update markers based on filtered facilities
+  private updateMarkers(): void {
+    // Clear existing markers
+    this.markers.forEach(marker => marker.map = null);
+    this.markers = [];
+    
+    // Create new markers for filtered facilities
+    this.createMarkers();
+    
+    // Reset clusterer
+    if (this.map) {
+      this.setupMarkerClusterer();
+    }
+  }
 
   // Create markers using AdvancedMarkerElement
   private createMarkers(): void {
-    // Clear existing markers before creating new ones
-    this.markers.forEach(marker => marker.map = null); // Remove markers from map
-    this.markers = []; // Clear the array
-
-    this.markers = this.facilities.map((facility) => {
+    // Use filtered facilities instead of all facilities
+    this.markers = this.filteredFacilities.map((facility) => {
       const markerElement = document.createElement('div');
       // Using the FacilityTypeMapper
       markerElement.innerHTML = `<i class="${FacilityTypeMapper.getFontAwesomeIcon(facility.type)}" aria-hidden="true"></i>`;

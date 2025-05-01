@@ -1,0 +1,68 @@
+<!-- Main container with header component -->
+<div class="main-container">
+  <!-- Header Component -->
+  <app-header></app-header>
+  
+  <!-- Header background div -->
+  <div class="header-bg">
+    <!-- Background styling can be customized through CSS -->
+  </div>
+
+  <div class="content-container">
+    <div class="py-6">
+      <!-- Header Top Row: Title -->
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-2 px-4">
+        <div class="page-info">
+          <h2 class="text-2xl font-bold text-white mt-1 drop-shadow-lg">
+            <span>{{ title }}</span>
+            <span *ngIf="currentPage"> - {{ currentPage }}</span>
+          </h2>
+        </div>
+      </div>
+      
+      <!-- Page Description -->
+      <div class="page-description mb-5 text-white max-w-3xl px-4 font-medium">
+        <p>{{ currentDescription }}</p>
+      </div>
+      
+      <!-- Navigation Tabs -->
+      <div class="nav-container mt-6 overflow-x-auto pb-2">
+        <nav class="flex justify-between items-center">
+          <!-- Left side navigation items -->
+          <div class="flex space-x-1 min-w-max">
+            <ng-container *ngFor="let item of navItems; let last = last">
+              <a [routerLink]="item.href" 
+                 routerLinkActive="tab-active"
+                 [routerLinkActiveOptions]="{exact: item.href.endsWith('/overview')}"
+                 class="header-tab group inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg">
+                <i [class]="item.icon + ' mr-2 text-lg'"></i>
+                <span>{{item.label}}</span>
+                <div class="tab-indicator"></div>
+              </a>
+              <div *ngIf="!last" class="h-6 border-r border-gray-100 mx-1 self-center"></div>
+            </ng-container>
+          </div>
+          
+          <!-- Right side user profile and settings -->
+          <div *ngIf="showProfileButtons" class="user-section flex items-center space-x-1">
+            <!-- Profile Button -->
+            <a class="header-tab group inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg">
+              <i class="fas fa-user mr-2 text-lg"></i>
+              <span>Profile</span>
+              <div class="tab-indicator"></div>
+            </a>
+            
+            <div class="h-6 border-r border-gray-100 mx-1 self-center"></div>
+            
+            <!-- Settings Button -->
+            <a class="header-tab group inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg">
+              <i class="fas fa-cog mr-2 text-lg"></i>
+              <span>Settings</span>
+              <div class="tab-indicator"></div>
+            </a>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>

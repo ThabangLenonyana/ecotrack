@@ -1,0 +1,62 @@
+/* filepath: /Users/thabanglenonyana/Enviro365-waste-management/frontend/src/app/features/map/map.component.scss */
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.map-page {
+  height: 100%;
+  width: 100%;
+}
+
+/* Style the main content container to match dashboard */
+.content-container {
+  z-index: 1;
+  background-color: #f9fafb;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  margin-top: -1rem;
+}
+
+.map-container {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+/* Navbar fade styles */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.navbar-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.navbar-hidden {
+  opacity: 0;
+  transform: translateY(-100%);
+}
+
+/* For small screens */
+@media (max-width: 768px) {
+  .navbar {
+    background-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+}
+
+

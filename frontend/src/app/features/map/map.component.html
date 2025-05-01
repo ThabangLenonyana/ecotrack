@@ -1,0 +1,31 @@
+<app-header-nav
+[title]="'Facility Map'"
+[navItems]="mapNavItems"
+[pageDescriptions]="mapPageDescriptions"
+[defaultDescription]="'Explore the facility map and manage your waste management system.'"
+[showProfileButtons]="true">
+</app-header-nav>
+
+<div class="content-container py-6 relative z-10 bg-gray-50">
+  <div class="map-container">
+    <!-- Map Component -->
+    <app-facility-map
+      [activeFilters]="activeFilters"
+      [facilities]="facilities"
+      (facilitySelected)="onFacilitySelected($event)">
+    </app-facility-map>
+    
+    <!-- Map Controls (positioned as overlay) -->
+    <app-map-controls
+      (filtersChanged)="onFiltersChanged($event)"
+      (facilitiesUpdated)="onFacilitiesUpdated($event)">
+    </app-map-controls>
+    
+    <!-- Info Window (overlay) -->
+    <app-info-window 
+      *ngIf="showInfoWindow && selectedFacility"
+      [facility]="selectedFacility"
+      (closeWindow)="onCloseInfoWindow()">
+    </app-info-window>
+  </div>
+</div>

@@ -1,9 +1,4 @@
-<!-- features/map/components/facility-map/facility-map.component.html -->
 <div class="map-container">
-  <div class="map-header">
-    <h2>Recycling & Waste Facilities in Gauteng</h2>
-  </div>
-
   <!-- Loading Indicator -->
   <div *ngIf="isLoading" class="loading-overlay">
     <div class="spinner">
@@ -22,5 +17,11 @@
     (mapInitialized)="onMapInitialized($event)">
   </google-map>
 
-  
+  <!-- Facilities count indicator -->
+  <div class="facilities-count" *ngIf="!isLoading">
+    <span>{{ filteredFacilities.length }} facilities</span> 
+    <span *ngIf="facilities.length !== filteredFacilities.length">
+      (filtered from {{ facilities.length }})
+    </span>
+  </div>
 </div>

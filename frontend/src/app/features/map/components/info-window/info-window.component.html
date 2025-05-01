@@ -1,0 +1,66 @@
+<div class="info-window-container">
+  <div class="info-window">
+    <!-- Header -->
+    <div class="info-window-header" [ngStyle]="{'background-color': getColor(facility.type) + '20'}">
+      <div class="flex items-center">
+        <div class="icon-container" [ngStyle]="{'background-color': getColor(facility.type) + '30', 'color': getColor(facility.type)}">
+          <i [class]="getIcon(facility.type)"></i>
+        </div>
+        <div class="ml-3 flex-grow">
+          <h3 class="text-lg font-medium text-gray-900">{{ facility.name }}</h3>
+          <p class="text-sm text-gray-600">{{ facility.type }}</p>
+        </div>
+        <button class="close-btn" (click)="close()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Content -->
+    <div class="info-window-content">
+      <!-- Location Info -->
+      <div class="info-section">
+        <h4><i class="fas fa-map-marker-alt text-gray-500 mr-2"></i> Location</h4>
+        <p>{{ facility.address }}</p>
+      </div>
+      
+      <!-- Operation Info if available -->
+      <div *ngIf="facility.operation" class="info-section">
+        <h4><i class="fas fa-clock text-gray-500 mr-2"></i> Operations</h4>
+        <p>{{ facility.operation }}</p>
+      </div>
+      
+      <!-- Website if available -->
+      <div *ngIf="facility.website" class="info-section">
+        <h4><i class="fas fa-globe text-gray-500 mr-2"></i> Website</h4>
+        <a (click)="openWebsite(facility.website)" class="website-link">
+          {{ facility.website }}
+          <i class="fas fa-external-link-alt ml-1"></i>
+        </a>
+      </div>
+      
+      <!-- Accepted materials if available -->
+      <div *ngIf="getAcceptedMaterials().length > 0" class="info-section">
+        <h4><i class="fas fa-recycle text-gray-500 mr-2"></i> Accepts</h4>
+        <div class="materials-grid">
+          <div *ngFor="let material of getAcceptedMaterials()" class="material-tag">
+            {{ material }}
+          </div>
+        </div>
+      </div>
+      
+      <!-- Additional info if available -->
+      <div *ngIf="facility.other" class="info-section">
+        <h4><i class="fas fa-info-circle text-gray-500 mr-2"></i> Additional Info</h4>
+        <p>{{ facility.other }}</p>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="info-window-footer">
+      <button class="btn-directions">
+        <i class="fas fa-directions mr-2"></i>Get Directions
+      </button>
+    </div>
+  </div>
+</div>

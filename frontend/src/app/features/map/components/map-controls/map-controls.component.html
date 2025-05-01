@@ -1,0 +1,112 @@
+<div class="map-controls-container">
+  <!-- Search and Radius Container -->
+  <div class="search-and-radius-container">
+    <!-- Search Bar -->
+    <div class="search-container">
+      <div class="search-input-wrapper">
+        <span class="search-icon">
+          <i class="fas fa-search"></i>
+        </span>
+        <input 
+          type="text" 
+          class="search-input"
+          [(ngModel)]="searchQuery"
+          placeholder="Search For Area"
+          (keyup.enter)="onSearch()">
+        <button 
+          class="location-toggle" 
+          [class.active]="locationEnabled"
+          (click)="toggleLocation()" 
+          title="Use my current location">
+          <i class="fas fa-crosshairs"></i> Current location
+        </button>
+      </div>
+    </div>
+    
+    <!-- Radius Incrementer -->
+    <div class="radius-incrementer">
+      <span class="radius-label">Radius:</span>
+      <div class="radius-controls">
+        <button class="radius-btn decrement" (click)="decrementRadius()">
+          <i class="fas fa-minus"></i>
+        </button>
+        <span class="radius-value">{{ filterForm.get('radius')?.value || 0 }} km</span>
+        <button class="radius-btn increment" (click)="incrementRadius()">
+          <i class="fas fa-plus"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Filter Buttons -->
+  <div class="filter-buttons">
+    <!-- City Button -->
+    <div class="dropdown">
+      <button class="filter-button" [class.active]="dropdownStates.city" (click)="toggleDropdown('city')">
+        <i class="fas fa-city"></i>
+        City
+        <span *ngIf="getSelectedCount('cities') > 0" class="badge">{{ getSelectedCount('cities') }}</span>
+        <i class="fas fa-chevron-down chevron"></i>
+      </button>
+      <div class="dropdown-menu" [class.show]="dropdownStates.city">
+        <div class="dropdown-items">
+          <div 
+            *ngFor="let city of cities" 
+            class="dropdown-item"
+            [class.selected]="filterForm.get('cities')?.get(city.value)?.value"
+            (click)="toggleCity(city.value)">
+            <i [class]="city.icon"></i>
+            <span>{{ city.label }}</span>
+            <i *ngIf="filterForm.get('cities')?.get(city.value)?.value" class="fas fa-check"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Materials Button -->
+    <div class="dropdown">
+      <button class="filter-button" [class.active]="dropdownStates.materials" (click)="toggleDropdown('materials')">
+        <i class="fas fa-recycle"></i>
+        Materials
+        <span *ngIf="getSelectedCount('materials') > 0" class="badge">{{ getSelectedCount('materials') }}</span>
+        <i class="fas fa-chevron-down chevron"></i>
+      </button>
+      <div class="dropdown-menu" [class.show]="dropdownStates.materials">
+        <div class="dropdown-items">
+          <div 
+            *ngFor="let material of materials" 
+            class="dropdown-item"
+            [class.selected]="filterForm.get('materials')?.get(material.value)?.value"
+            (click)="toggleMaterial(material.value)">
+            <i [class]="material.icon"></i>
+            <span>{{ material.label }}</span>
+            <i *ngIf="filterForm.get('materials')?.get(material.value)?.value" class="fas fa-check"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Facility Type Button -->
+    <div class="dropdown">
+      <button class="filter-button" [class.active]="dropdownStates.facilityType" (click)="toggleDropdown('facilityType')">
+        <i class="fas fa-building"></i>
+        Facility Type
+        <span *ngIf="getSelectedCount('types') > 0" class="badge">{{ getSelectedCount('types') }}</span>
+        <i class="fas fa-chevron-down chevron"></i>
+      </button>
+      <div class="dropdown-menu" [class.show]="dropdownStates.facilityType">
+        <div class="dropdown-items">
+          <div 
+            *ngFor="let type of facilityTypes" 
+            class="dropdown-item"
+            [class.selected]="filterForm.get('types')?.get(type.value)?.value"
+            (click)="toggleFacilityType(type.value)">
+            <i [class]="type.icon"></i>
+            <span>{{ type.label }}</span>
+            <i *ngIf="filterForm.get('types')?.get(type.value)?.value" class="fas fa-check"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

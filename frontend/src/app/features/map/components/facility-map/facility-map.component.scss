@@ -1,10 +1,14 @@
 // features/map/components/facility-map/facility-map.component.scss
 .map-container {
   position: relative;
-  width: 100%;
+  height: 600px;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  google-map {
+    height: 100%;
+  }
 }
 
 .map-header {
@@ -48,65 +52,6 @@
   }
 }
 
-.map-legend {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  background-color: white;
-  padding: 10px;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 5;
-  
-  h3 {
-    margin-top: 0;
-    margin-bottom: 8px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #333;
-  }
-  
-  .legend-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 5px;
-    
-    .legend-icon {
-      width: 20px;
-      height: 20px;
-      margin-right: 8px;
-      background-size: contain;
-      background-position: center;
-      background-repeat: no-repeat;
-      
-      &.recycling {
-        background-color: #4CAF50;
-        border-radius: 50%;
-      }
-      
-      &.waste {
-        background-color: #FF5722;
-        border-radius: 50%;
-      }
-      
-      &.dropoff {
-        background-color: #2196F3;
-        border-radius: 50%;
-      }
-      
-      &.buyback {
-        background-color: #9C27B0;
-        border-radius: 50%;
-      }
-    }
-    
-    span {
-      font-size: 0.8rem;
-      color: #555;
-    }
-  }
-}
-
 // Marker animation for newly loaded markers
 @keyframes markerPulse {
   0% {
@@ -121,6 +66,18 @@
     transform: scale(1);
     opacity: 1;
   }
+}
+
+.facilities-count {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  background-color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  font-size: 13px;
+  color: #4b5563;
 }
 
 // Enhanced styling for marker icons

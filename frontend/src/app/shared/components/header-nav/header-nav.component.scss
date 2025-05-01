@@ -1,0 +1,84 @@
+:host {
+  display: block;
+  position: relative;
+  width: 100%;
+}
+
+.header-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  /* Change the height here to your desired value */
+  height: 450px; /* You can adjust this value as needed */
+  z-index: -1;
+  background: linear-gradient(135deg, #155e3f 0%, #16a34a 100%);
+}
+
+.content-container {
+  position: relative;
+  z-index: 1;
+}
+
+.header-tab {
+  position: relative;
+  color: rgba(255, 255, 255, 0.7);
+  transition: color 0.3s, transform 0.2s;
+  
+  &:hover {
+    color: white;
+    transform: translateY(-1px);
+  }
+  
+  .tab-indicator {
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    width: 80%;
+    height: 3px;
+    background-color: white;
+    border-radius: 1.5px;
+    transition: transform 0.3s;
+  }
+  
+  &:hover .tab-indicator {
+    transform: translateX(-50%) scaleX(0.8);
+  }
+  
+  &.tab-active {
+    color: white;
+    font-weight: 500;
+    
+    .tab-indicator {
+      transform: translateX(-50%) scaleX(1);
+    }
+  }
+}
+
+.page-description {
+  opacity: 0.8;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.tab-active {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Add responsive styles */
+@media (max-width: 640px) {
+  nav {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .user-section {
+    width: 100%;
+    justify-content: center;
+    margin-top: 8px;
+  }
+}
