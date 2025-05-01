@@ -9,9 +9,9 @@ import { HeaderComponent } from './shared/header/header.component';
   standalone: true,
   imports: [CommonModule, RouterOutlet, HeaderComponent, FooterComponent],
   template: `
-    <app-header></app-header>
+
     <router-outlet></router-outlet>
-    <app-footer></app-footer>
+    
   `
 })
 export class AppComponent {

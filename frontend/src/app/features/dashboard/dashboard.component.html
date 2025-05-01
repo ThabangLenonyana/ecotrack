@@ -1,13 +1,12 @@
-<!-- Green Background for entire dashboard -->
-<div class="dashboard-bg animated-gradient animated-shapes">
-  <div id="particles-js" class="absolute inset-0 z-0"></div>
+<div class="dashboard-header">
+  <app-header-nav
+    [title]="'Dashboard'"
+    [navItems]="dashboardNavItems"
+    [pageDescriptions]="dashboardPageDescriptions"
+    [defaultDescription]="'Manage your waste management system efficiently and sustainably.'"
+    [showProfileButtons]="true">
+  </app-header-nav>
 </div>
-
-<!-- Dashboard Header - Header background is now handled in the dashboard-header component -->
-<div class="dashboard-header" >
-  <app-dashboard-header></app-dashboard-header>
-</div>
-
 
 <!-- Main Content -->
 <main class="content-container py-6 relative z-10 bg-gray-50">
