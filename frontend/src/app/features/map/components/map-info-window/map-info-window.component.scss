@@ -157,9 +157,6 @@
   height: 48px;
   cursor: pointer;
   
-  &:hover {
-    background-color: darken(#16a34a, 5%);
-  }
   
   &.expanded {
     transform: rotate(180deg);
