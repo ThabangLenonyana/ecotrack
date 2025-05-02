@@ -25,6 +25,7 @@
 /* Search Container Styles */
 .search-container {
   flex: 1;
+  position: relative;
 }
 
 .search-input-wrapper {
@@ -163,6 +164,7 @@
 .filter-buttons {
   display: flex;
   gap: 10px;
+  align-items: center;
 }
 
 .filter-button {
@@ -280,6 +282,72 @@
   }
 }
 
+/* Search suggestions styles */
+.search-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 5px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 10;
+}
+
+.suggestion-group {
+  padding: 8px 0;
+}
+
+.suggestion-group:not(:last-child) {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.suggestion-label {
+  padding: 0 12px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #6b7280;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.clear-history {
+  background: none;
+  border: none;
+  font-size: 11px;
+  color: #16a34a;
+  cursor: pointer;
+  padding: 2px 4px;
+}
+
+.suggestion-item {
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 14px;
+  color: #4b5563;
+}
+
+.suggestion-item:hover {
+  background-color: #f3f4f6;
+}
+
+.suggestion-item i {
+  margin-right: 8px;
+  color: #9ca3af;
+  width: 16px;
+  text-align: center;
+}
+
+.history-item i {
+  color: #6b7280;
+}
+
 /* Responsive adjustments */
 @media (max-width: 992px) {
   .map-controls-container {
@@ -313,5 +381,52 @@
 @media (max-width: 768px) {
   .dropdown-menu {
     width: 100%;
+  }
+}
+
+/* Add this to your existing styles */
+.reset-button {
+  background-color: #ef4444;
+  
+  &:hover {
+    background-color: #dc2626;
+  }
+}
+
+/* Circular Reset Button */
+.reset-button-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #e5e7eb;
+  color: #6b7280;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+  
+  i {
+    font-size: 16px;
+    transition: transform 0.3s ease;
+  }
+  
+  &:hover {
+    background-color: #d1d5db;
+    
+    i {
+      transform: rotate(90deg);
+    }
+  }
+  
+  &.active {
+    background-color: #ef4444;
+    color: white;
+    
+    &:hover {
+      background-color: #dc2626;
+    }
   }
 }

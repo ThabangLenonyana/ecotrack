@@ -12,7 +12,10 @@
           class="search-input"
           [(ngModel)]="searchQuery"
           placeholder="Search For Area"
-          (keyup.enter)="onSearch()">
+          (keyup.enter)="onSearch()"
+          (input)="onSearchInput()"
+          (focus)="onSearchFocus()"
+          (blur)="onSearchBlur()">
         <button 
           class="location-toggle" 
           [class.active]="locationEnabled"
@@ -20,6 +23,33 @@
           title="Use my current location">
           <i class="fas fa-crosshairs"></i> Current location
         </button>
+      </div>
+      
+      <!-- Search Suggestions Dropdown -->
+      <div class="search-suggestions" *ngIf="showSuggestions">
+        <div class="suggestion-group" *ngIf="suggestedLocations.length > 0">
+          <div class="suggestion-label">Suggestions</div>
+          <div 
+            *ngFor="let suggestion of suggestedLocations" 
+            class="suggestion-item" 
+            (mousedown)="selectSuggestion(suggestion)">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>{{ suggestion.description }}</span>
+          </div>
+        </div>
+        <div class="suggestion-group" *ngIf="searchHistory.length > 0">
+          <div class="suggestion-label">
+            Recent Searches
+            <button class="clear-history" (mousedown)="clearSearchHistory()">Clear</button>
+          </div>
+          <div 
+            *ngFor="let item of searchHistory" 
+            class="suggestion-item history-item" 
+            (mousedown)="selectSearchItem(item)">
+            <i class="fas fa-history"></i>
+            <span>{{ item }}</span>
+          </div>
+        </div>
       </div>
     </div>
     
@@ -108,5 +138,14 @@
         </div>
       </div>
     </div>
+    
+    <!-- Add Reset Button -->
+    <button 
+      class="reset-button-circle" 
+      [class.active]="hasActiveFilters()" 
+      (click)="resetFilters()" 
+      title="Reset Filters">
+      <i class="fas fa-undo-alt"></i>
+    </button>
   </div>
 </div>
