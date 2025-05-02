@@ -42,4 +42,24 @@ public interface RecyclingLocationRepository extends JpaRepository<RecyclingLoca
         @Param("acceptsEWaste") boolean acceptsEWaste,
         @Param("acceptsCartons") boolean acceptsCartons
     );
+
+    // Find distinct cities
+    @Query("SELECT DISTINCT r.city FROM RecyclingLocation r WHERE r.city IS NOT NULL ORDER BY r.city")
+    List<String> findDistinctCities();
+    
+    // Find distinct facility types
+    @Query("SELECT DISTINCT r.type FROM RecyclingLocation r WHERE r.type IS NOT NULL ORDER BY r.type")
+    List<String> findDistinctTypes();
+    
+    // Find all available materials from the database
+    @Query(value = 
+        "SELECT 'plastic' as material FROM recycling_locations WHERE accepts_plastic = true " +
+        "UNION SELECT 'paper' FROM recycling_locations WHERE accepts_paper = true " +
+        "UNION SELECT 'cardboard' FROM recycling_locations WHERE accepts_cardboard = true " +
+        "UNION SELECT 'metal' FROM recycling_locations WHERE accepts_metal = true " +
+        "UNION SELECT 'ewaste' FROM recycling_locations WHERE accepts_ewaste = true " +
+        "UNION SELECT 'cartons' FROM recycling_locations WHERE accepts_cartons = true " +
+        "UNION SELECT 'motorOil' FROM recycling_locations WHERE accepts_motor_oil = true",
+        nativeQuery = true)
+    List<String> findDistinctMaterials();
 }
