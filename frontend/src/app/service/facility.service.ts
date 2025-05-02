@@ -52,6 +52,42 @@ export class FacilityService {
       );
   }
 
+  /**
+ * Get all filter options for recycling locations
+ * 
+ * @returns Observable with filter options data
+ */
+  getFilterOptions(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/filter-options`);
+  }
+
+  /**
+   * Get city filter options
+   * 
+   * @returns Observable with city filter options
+   */
+  getCityOptions(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/filter-options/cities`);
+  }
+
+  /**
+   * Get facility type filter options
+   * 
+   * @returns Observable with facility type filter options
+   */
+  getFacilityTypeOptions(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/filter-options/facility-types`);
+  }
+
+  /**
+   * Get material filter options
+   * 
+   * @returns Observable with material filter options
+   */
+  getMaterialOptions(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/filter-options/materials`);
+  }
+
   private transformLocations(locations: any[]): RecyclingFacility[] {
     return locations.map(location => {
       // Compose address from city and municipality

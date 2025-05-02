@@ -3,6 +3,7 @@ export interface RecyclingFacility {
   name: string;
   latitude: number;
   longitude: number;
+  distanceToUser?: number; // Distance to user in KM
   
   // Location info
   municipality?: string;
