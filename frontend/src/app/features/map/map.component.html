@@ -1,31 +1,44 @@
 <app-header-nav
-[title]="'Facility Map'"
-[navItems]="mapNavItems"
-[pageDescriptions]="mapPageDescriptions"
-[defaultDescription]="'Explore the facility map and manage your waste management system.'"
-[showProfileButtons]="true">
+  [title]="'Facility Map'"
+  [navItems]="mapNavItems"
+  [pageDescriptions]="mapPageDescriptions"
+  [defaultDescription]="'Explore the facility map and manage your waste management system.'"
+  [showProfileButtons]="true">
 </app-header-nav>
 
-<div class="content-container py-6 relative z-10 bg-gray-50">
-  <div class="map-container">
-    <!-- Map Component -->
-    <app-facility-map
-      [activeFilters]="activeFilters"
-      [facilities]="facilities"
-      (facilitySelected)="onFacilitySelected($event)">
-    </app-facility-map>
+<div class="content-container py-4 relative z-10 bg-gray-50">
+  <!-- Grid Layout with consistent spacing -->
+  <div class="grid grid-rows-[auto_1fr] grid-cols-[1fr_345px] gap-4 h-[calc(100vh-140px)] overflow-hidden">
+    <!-- Controls (Top Row) -->
+    <div class="col-span-2 pb-9 ">
+      <app-map-controls
+        (filtersChanged)="onFiltersChanged($event)"
+        (facilitiesUpdated)="onFacilitiesUpdated($event)">
+      </app-map-controls>
+    </div>
     
-    <!-- Map Controls (positioned as overlay) -->
-    <app-map-controls
-      (filtersChanged)="onFiltersChanged($event)"
-      (facilitiesUpdated)="onFacilitiesUpdated($event)">
-    </app-map-controls>
+    <!-- Main Map (Left) -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+      <app-facility-map
+        [activeFilters]="activeFilters"
+        [facilities]="facilities"
+        (facilitySelected)="onFacilitySelected($event)"
+        (clusteringStateChanged)="updateMapViewContext($event)">
+      </app-facility-map>
+    </div>
     
-    <!-- Info Window (overlay) -->
-    <app-info-window 
-      *ngIf="showInfoWindow && selectedFacility"
-      [facility]="selectedFacility"
-      (closeWindow)="onCloseInfoWindow()">
-    </app-info-window>
+    <!-- Info Window (Right) -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-y-auto map-info-container">
+      <app-map-info-window [facilities]="facilities" [currentView]="currentMapView">
+      </app-map-info-window>
+    </div>
   </div>
+  
+  <!-- Facility Details (Overlay) -->
+  <app-info-window 
+    *ngIf="showInfoWindow && selectedFacility"
+    [facility]="selectedFacility"
+    (closeWindow)="onCloseInfoWindow()"
+    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 max-w-lg bg-white rounded-lg shadow-lg">
+  </app-info-window>
 </div>

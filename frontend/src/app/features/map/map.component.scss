@@ -1,7 +1,7 @@
 /* filepath: /Users/thabanglenonyana/Enviro365-waste-management/frontend/src/app/features/map/map.component.scss */
 :host {
   display: block;
-  min-height: 100vh;
+  height: 100%;
 }
 
 .map-page {
@@ -31,6 +31,8 @@
   overflow: hidden;
 }
 
+
+
 /* Navbar fade styles */
 .navbar {
   position: fixed;
@@ -51,11 +53,55 @@
   transform: translateY(-100%);
 }
 
+/* Style for the facility info window overlay */
+app-info-window {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 0.5rem;
+  max-height: 80vh;
+  overflow-y: auto;
+  background-color: white;
+}
+
 /* For small screens */
 @media (max-width: 768px) {
   .navbar {
     background-color: rgba(255, 255, 255, 0.95);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  :host ::ng-deep .grid-cols-\[1fr_350px\] {
+    grid-template-columns: 1fr;  /* Stack vertically on mobile */
+  }
+  
+  :host ::ng-deep .col-span-2 {
+    grid-column: span 1;  /* Take up one column on mobile */
+  }
+
+  .content-container .grid {
+    grid-template-rows: auto auto 1fr;
+    grid-template-columns: 1fr;
+  }
+  
+  .content-container .col-span-2 {
+    grid-column: span 1;
+  }
+
+  .grid-cols-\[1fr_320px\] {
+    grid-template-columns: 1fr;
+  }
+  
+  .grid-rows-\[auto_1fr\] {
+    grid-template-rows: auto auto 1fr;
+  }
+  
+  .col-span-2 {
+    grid-column: span 1;
+  }
+  
+  /* Stack the info window below the map on mobile */
+  app-map-info-window {
+    max-height: 300px;
   }
 }
 

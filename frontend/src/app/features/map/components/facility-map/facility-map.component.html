@@ -1,15 +1,15 @@
-<div class="map-container">
+<div class="map-container h-full w-full">
   <!-- Loading Indicator -->
-  <div *ngIf="isLoading" class="loading-overlay">
-    <div class="spinner">
-      <i class="fas fa-circle-notch fa-spin fa-3x"></i>
-      <p>Loading facilities...</p>
+  <div *ngIf="isLoading" class="absolute inset-0 flex items-center justify-center bg-white bg-opacity-80 z-20">
+    <div class="text-center">
+      <i class="fas fa-circle-notch fa-spin fa-3x text-green-600"></i>
+      <p class="mt-4 text-gray-700">Loading facilities...</p>
     </div>
   </div>
 
   <!-- Map Component -->
   <google-map 
-    height="600px"
+    height="100%"
     width="100%"
     [center]="center"
     [zoom]="zoom"
@@ -17,11 +17,18 @@
     (mapInitialized)="onMapInitialized($event)">
   </google-map>
 
-  <!-- Facilities count indicator -->
-  <div class="facilities-count" *ngIf="!isLoading">
-    <span>{{ filteredFacilities.length }} facilities</span> 
-    <span *ngIf="facilities.length !== filteredFacilities.length">
-      (filtered from {{ facilities.length }})
+  <!-- Clustering level indicator -->
+  <div class="absolute top-4 right-4 bg-white bg-opacity-90 py-1 px-3 rounded shadow text-sm" *ngIf="!isLoading && clusteringService.getClusteringState()">
+    <span *ngIf="clusteringService.getClusteringState().level === 'municipality'">
+      <i class="fas fa-building mr-1"></i> Municipal view
+    </span>
+    <span *ngIf="clusteringService.getClusteringState().level === 'city'">
+      <i class="fas fa-city mr-1"></i> {{ clusteringService.getClusteringState().municipality }} > City view
+    </span>
+    <span *ngIf="clusteringService.getClusteringState().level === 'facility'">
+      <i class="fas fa-map-marker-alt mr-1"></i> {{ clusteringService.getClusteringState().municipality }} > {{ clusteringService.getClusteringState().city }}
     </span>
   </div>
+
+
 </div>
