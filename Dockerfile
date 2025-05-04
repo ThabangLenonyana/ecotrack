@@ -19,5 +19,16 @@ RUN mvn clean package -DskipTests
 FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
 COPY --from=backend-build /app/target/waste-management-0.0.1-SNAPSHOT.jar app.jar
-EXPOSE 8080
+
+# Default to dev profile if not specified
+ENV SPRING_PROFILES_ACTIVE=dev
+# Environment variables for Azure Vision, etc.
+ENV VISION_ENDPOINT=''
+ENV VISION_KEY=''
+ENV DB_URL=''
+ENV DB_USERNAME=''
+ENV DB_PASSWORD=''
+
+# Expose correct port
+EXPOSE 8081
 ENTRYPOINT ["java", "-jar", "app.jar"]
