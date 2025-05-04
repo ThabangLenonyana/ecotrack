@@ -23,22 +23,32 @@ export class HeaderNavComponent implements OnInit {
   currentPage: string = '';
   currentDescription: string = '';
   
-  constructor(private router: Router) {}
+  constructor(public router: Router) {} // Changed to public for template access
   
   ngOnInit() {
     // Set initial page based on current URL
-    this.updatePageInfo(this.router.url);
+    this.updatePageInfo(this.router.url || '');
     
     // Subscribe to route changes
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
       map(event => event as NavigationEnd)
     ).subscribe((event) => {
-      this.updatePageInfo(event.urlAfterRedirects);
+      this.updatePageInfo(event.urlAfterRedirects || '');
     });
+    
+    // Make sure navItems all have routes
+    if (this.navItems) {
+      this.navItems = this.navItems.map(item => ({
+        ...item,
+        route: item.route || '#'
+      }));
+    }
   }
   
   private updatePageInfo(url: string): void {
+    if (!url) return;
+    
     const urlParts = url.split('/');
     const page = urlParts[urlParts.length - 1] || 'overview';
     

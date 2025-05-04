@@ -1,9 +1,102 @@
 <app-header></app-header>
-<app-hero-section></app-hero-section>
+
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="container">
+    <h1 class="hero-title">Recycle anything, anywhere, whilst tracking your environmental impact</h1>
+    <p class="hero-subtitle">Join the movement transforming South Africa's waste future - find local recycling points, get instant sorting guidance and earn rewards from loading retailers</p>
+    <div class="cta-buttons">
+      <button class="btn btn-primary" (click)="navigateToMap()">
+        <i class="fas fa-map-marker-alt mr-2"></i>Find Recycling Points
+      </button>
+      <button class="btn btn-secondary" (click)="navigateToScanner()">
+        <i class="fas fa-camera mr-2"></i>Scan & Recycle
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Main Content -->
 <div class="main-content">
-  <main class="content-container">
-    <app-category-grid (viewCategoryDetails)="openCategoryModal($event)"></app-category-grid>
-  </main>
+  <!-- Stats Section -->
+  <section class="stats-section">
+    <div class="container">
+      <h2 class="section-title">Our Impact</h2>
+      <div class="stats-container">
+        <div class="stat-card">
+          <div class="stat-number">1500+</div>
+          <div class="stat-label">Facilities</div>
+          <i class="fas fa-building stat-icon"></i>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">5</div>
+          <div class="stat-label">Gauteng Municipalities</div>
+          <i class="fas fa-city stat-icon"></i>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">10+</div>
+          <div class="stat-label">Facility Types</div>
+          <i class="fas fa-industry stat-icon"></i>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<!-- Top Categories Section -->
+<section class="top-categories-section">
+  <div class="container">
+    <h2 class="section-title">Top Recycling Categories</h2>
+    <div class="categories-container">
+      <!-- Plastic Category - Hard-coded -->
+      <div class="category-card">
+        <div class="category-icon">
+          <i class="fas fa-recycle" style="color: #4ade80"></i>
+        </div>
+        <h3 class="category-name">Plastic</h3>
+        <p class="category-description">Recyclable plastic items including bottles, containers, and packaging</p>
+      </div>
+      
+      <!-- Paper Category - Hard-coded -->
+      <div class="category-card">
+        <div class="category-icon">
+          <i class="fas fa-newspaper" style="color: #3b82f6"></i>
+        </div>
+        <h3 class="category-name">Paper</h3>
+        <p class="category-description">Paper products like newspapers, magazines, and cardboard</p>
+      </div>
+      
+      <!-- Glass Category - Hard-coded -->
+      <div class="category-card">
+        <div class="category-icon">
+          <i class="fas fa-wine-bottle" style="color: #6366f1"></i>
+        </div>
+        <h3 class="category-name">Glass</h3>
+        <p class="category-description">Glass bottles and jars of all colors</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <!-- FAQ Section -->
+  <section class="faq-section">
+    <div class="container">
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <div class="faq-container">
+        <div class="faq-item" *ngFor="let faq of faqs; let i = index">
+          <div class="faq-question" (click)="toggleFaq(i)">
+            <h3>{{faq.question}}</h3>
+            <span class="toggle-icon">
+              <i class="fas" [ngClass]="faq.isOpen ? 'fa-minus' : 'fa-plus'"></i>
+            </span>
+          </div>
+          <div class="faq-answer" [ngClass]="{'open': faq.isOpen}">
+            <p>{{faq.answer}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </div>
+
 <app-category-modal></app-category-modal>
 <app-footer></app-footer>

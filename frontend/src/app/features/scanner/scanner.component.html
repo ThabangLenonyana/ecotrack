@@ -1,0 +1,80 @@
+<!-- src/app/features/scanner/scanner.component.html -->
+<app-header-nav 
+  class="scanner-header-nav"
+  title="Waste Scanner" 
+  [navItems]="scannerNavItems"
+  [pageDescriptions]="scannerPageDescriptions">
+</app-header-nav>
+
+<div class="scanner-container">
+  <div class="scanner-content">
+    <!-- Location Permission Banner -->
+    <div *ngIf="!locationPermissionGranted" class="location-banner">
+      <p>
+        <i class="fas fa-location-slash"></i>
+        Location services are disabled. Enabling location helps find recycling centers near you.
+      </p>
+    </div>
+
+    <!-- Camera Section -->
+    <div *ngIf="isCapturing" class="camera-section">
+      <app-camera 
+        (captureComplete)="onImageCaptured($event)"
+        (captureCancelled)="cancelCapture()">
+      </app-camera>
+    </div>
+
+    <!-- Image Preview Section -->
+    <div *ngIf="capturedImage && !isCapturing" class="preview-section">
+      <div class="preview-image-container">
+        <img [src]="capturedImage" alt="Captured waste" class="preview-image">
+      </div>
+      <div class="preview-actions">
+        <button (click)="retakePhoto()" class="btn btn-secondary">
+          <i class="fas fa-redo"></i> Retake
+        </button>
+        <button (click)="analyzeWaste()" class="btn btn-primary" [disabled]="isLoading">
+          <i class="fas fa-search"></i>
+          <span *ngIf="!isLoading">Analyze</span>
+          <span *ngIf="isLoading">Analyzing...</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Start Section -->
+    <div *ngIf="!capturedImage && !isCapturing" class="start-section">
+      <div class="start-icon">
+        <!-- Added SVG in the start icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 483.9465 746.68887" class="w-20 h-20">
+          <rect x="120.29764" y="145.14246" width="168.87506" height="202.09639" fill="#090814"/>
+          <path d="M98.10793,159.63256c-12.34086-49.71173,17.95428-100.0154,67.66635-112.35634,49.71207-12.34094,100.01574,17.9542,112.3566,67.66593,10.00844,40.31622-8.02905,81.01784-41.72036,101.54731l-10.73559,14.14401,63.14075,63.00697-92.34307,79.30866-104.651-84.08307s61.78203-34.12624,65.22639-64.2008c-28.29138-10.08982-51.16085-33.69627-58.94006-65.03267Z" fill="#ffb6b6"/>
+          <path d="M445.58976,351.39151l-72.78514-9.50658v40.80683l-57.12956-99.02458-69.69875-17.393s-19.11145,39.3067-112.02768-18.51701l-72.36412-3.26455S2.17991,214.3787.15055,310.81733c-2.02936,96.43896,16.33557,283.03078,62.52215,264.48268l4.35273,35.91001,225.7978,4.11566,12.83649-31.43123s10.29346-102.86684,8.4084-127.73789c31.62453,29.9953,79.15985,66.05976,116.41015,55.48479,61.3853-17.42612,15.11149-160.24984,15.11149-160.24984Z" fill="#16a34a"/>
+        </svg>
+      </div>
+      <p>Take a photo of waste item to identify its material and get disposal instructions</p>
+      
+      <div class="action-buttons">
+        <!-- Camera capture button -->
+        <button (click)="startCapture()" class="btn btn-primary">
+          <i class="fas fa-camera"></i> Take Photo
+        </button>
+        
+        <!-- Photo upload button -->
+        <label for="file-upload" class="btn btn-secondary">
+          <i class="fas fa-image"></i> Upload Photo
+          <input 
+            type="file" 
+            id="file-upload" 
+            accept="image/*" 
+            (change)="onFileSelected($event)"
+            style="display: none">
+        </label>
+      </div>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+  </div>
+</div>

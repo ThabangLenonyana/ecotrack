@@ -14,5 +14,10 @@ export const routes: Routes = [
     {
         path: 'map',
         loadChildren: () => import('./features/map/map.module').then(m => m.MapModule)
+    },
+
+    {
+        path: 'scanner',
+        loadChildren: () => import('./features/scanner/scanner.module').then(m => m.ScannerModule)
     }
 ];

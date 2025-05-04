@@ -1,44 +1,46 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { MapControlsComponent } from '../map-controls/map-controls.component';
 import { FacilityService } from '../../../../service/facility.service';
 import { RecyclingFacility } from '../../../../models/recycling-facility';
 import { Router } from '@angular/router';
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { HeaderNavComponent } from '../../../../shared/components/header-nav/header-nav.component'; // Add this import
+
+interface PageEvent {
+  previousPageIndex: number;
+  pageIndex: number;
+  pageSize: number;
+  length: number;
+}
 
 @Component({
   selector: 'app-look-up',
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     MapControlsComponent,
-    MatCardModule,
-    MatButtonModule,
     MatIconModule,
-    MatDividerModule,
-    MatChipsModule,
-    MatPaginatorModule,
-    MatProgressSpinnerModule,
-    MatTooltipModule
+    HeaderNavComponent // Add HeaderNavComponent to imports
   ],
   templateUrl: './look-up.component.html',
   styleUrl: './look-up.component.scss'
 })
-export class LookUpComponent implements OnInit {
+export class LookUpComponent implements OnInit, OnDestroy {
+  // Make Math available in the template
+  Math = Math;
+
   // Facility data
   facilities: RecyclingFacility[] = [];
   filteredFacilities: RecyclingFacility[] = [];
   
   // Pagination
-  pageSize = 10;
-  pageSizeOptions: number[] = [5, 10, 20, 50];
+  pageSize = 12;
+  pageSizeOptions: number[] = [6, 12, 24, 48];
   pageIndex = 0;
   totalFacilities = 0;
   
@@ -47,6 +49,20 @@ export class LookUpComponent implements OnInit {
   error: string | null = null;
   activeFilters: any = {};
   
+  // Destroy subject for unsubscribing
+  private destroy$ = new Subject<void>();
+  
+  // Add these properties for the header-nav component
+  mapNavItems = [
+    { label: 'Map View', route: '/map', icon: 'map' },
+    { label: 'Lookup', route: '/map/lookup', icon: 'search', active: true },
+    { label: 'Recycling Guide', route: '/map/guide', icon: 'info' }
+  ];
+  
+  mapPageDescriptions = {
+    'lookup': 'Search for recycling facilities by location, material type, or facility name.'
+  };
+
   constructor(
     private facilityService: FacilityService,
     private router: Router
@@ -54,6 +70,11 @@ export class LookUpComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadFacilities();
+  }
+  
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   /**
@@ -64,6 +85,7 @@ export class LookUpComponent implements OnInit {
     this.error = null;
     
     this.facilityService.getAllFacilities()
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (data) => {
           this.facilities = data;
@@ -117,6 +139,9 @@ export class LookUpComponent implements OnInit {
       if (this.activeFilters.userLocation && this.activeFilters.sortBy === 'nearest') {
         // The facilities should already have distance calculated from the API
         result.sort((a, b) => (a.distance || Infinity) - (b.distance || Infinity));
+      } else if (this.activeFilters.sortBy === 'name') {
+        // Sort alphabetically by name
+        result.sort((a, b) => a.name.localeCompare(b.name));
       }
     }
     
@@ -129,11 +154,25 @@ export class LookUpComponent implements OnInit {
   }
   
   /**
-   * Handle page changes from the paginator
+   * Handle page changes
    */
   onPageChange(event: PageEvent): void {
     this.pageSize = event.pageSize;
     this.pageIndex = event.pageIndex;
+    this.applyFilters();
+    
+    // Scroll to top of results when page changes
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 100);
+  }
+  
+  /**
+   * Handle page size changes
+   */
+  onPageSizeChange(size: number): void {
+    this.pageSize = size;
+    this.pageIndex = 0; // Reset to first page
     this.applyFilters();
   }
 
@@ -143,6 +182,15 @@ export class LookUpComponent implements OnInit {
   onFiltersChanged(filters: any): void {
     this.activeFilters = filters;
     this.pageIndex = 0; // Reset to first page when filters change
+    this.applyFilters();
+  }
+  
+  /**
+   * Reset all filters
+   */
+  resetFilters(): void {
+    this.activeFilters = {};
+    this.pageIndex = 0;
     this.applyFilters();
   }
   
@@ -190,7 +238,6 @@ export class LookUpComponent implements OnInit {
    * Navigate to view facility details
    */
   viewFacilityDetails(facility: RecyclingFacility): void {
-    // Navigate to a details page (you might need to create this route)
     this.router.navigate(['/facility', facility.id]);
   }
   

@@ -34,11 +34,20 @@ header {
 }
 
 .navbar-visible {
-  opacity: 1;
+  visibility: visible;
   transform: translateY(0);
+  transition: transform 0.3s ease, visibility 0s;
 }
 
 .navbar-hidden {
-  opacity: 0;
+  visibility: hidden;
   transform: translateY(-100%);
+  transition: transform 0.3s ease, visibility 0s 0.3s;
+}
+
+@media (max-width: 767px) {
+  .navbar-pill {
+    border-radius: 1rem;
+    overflow: hidden;
+  }
 }

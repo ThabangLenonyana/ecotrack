@@ -2,19 +2,41 @@ import { CommonModule } from '@angular/common';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-header',
   standalone: true,
   imports: [CommonModule, RouterLink, RouterLinkActive],
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
+  animations: [
+    trigger('mobileMenuAnimation', [
+      state('closed', style({
+        opacity: 0,
+        transform: 'translateY(-20px)',
+        visibility: 'hidden'
+      })),
+      state('open', style({
+        opacity: 1,
+        transform: 'translateY(0)',
+        visibility: 'visible'
+      })),
+      transition('closed => open', [
+        animate('0.2s ease-out')
+      ]),
+      transition('open => closed', [
+        animate('0.2s ease-in')
+      ])
+    ])
+  ]
 })
 export class HeaderComponent implements OnInit {
   isVisible = true;
   lastScrollPosition = 0;
   scrollThreshold = 50;
   isMapPage = false;
+  isMobileMenuOpen = false;
 
   private updateIsMapPage() {
     this.isMapPage = this.router.url.includes('/map');
@@ -28,10 +50,20 @@ export class HeaderComponent implements OnInit {
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
       this.updateIsMapPage();
+      // Close mobile menu on navigation
+      this.isMobileMenuOpen = false;
     });
     
     // Set initial page state
     this.updateIsMapPage();
+  }
+
+  toggleMobileMenu() {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+
+  closeMobileMenu() {
+    this.isMobileMenuOpen = false;
   }
 
   @HostListener('window:scroll')
@@ -53,5 +85,13 @@ export class HeaderComponent implements OnInit {
     }
     
     this.lastScrollPosition = currentScrollPosition;
+  }
+
+  @HostListener('window:resize')
+  onWindowResize() {
+    // Close mobile menu if screen is resized to desktop view
+    if (window.innerWidth >= 768) { // 768px is the md breakpoint in Tailwind
+      this.isMobileMenuOpen = false;
+    }
   }
 }

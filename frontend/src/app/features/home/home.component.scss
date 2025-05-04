@@ -1,3 +1,11 @@
+/* filepath: /Users/thabanglenonyana/Enviro365-waste-management/frontend/src/app/features/home/home.component.scss */
+:host {
+  display: block;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 .main-content {
   position: relative;
   z-index: 30;
@@ -8,9 +16,313 @@
   padding-top: 3rem;
 }
 
-:host {
-  display: block;
-  min-height: 100vh;
+/* Hero Section */
+.hero-section {
+  background: linear-gradient(135deg, #4ade80, #3b82f6);
+  color: white;
+  padding: 6rem 0;
+  text-align: center;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.hero-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+.cta-buttons {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  
+  .btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+  
+  .btn-primary {
+    background-color: white;
+    color: #3b82f6;
+    
+    &:hover {
+      background-color: #f8fafc;
+    }
+  }
+  
+  .btn-secondary {
+    background-color: transparent;
+    border: 2px solid white;
+    color: white;
+    
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+}
+
+/* Stats Section */
+.section-title {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  color: #1e3a8a;
+}
+
+.stats-section {
+  background-color: white;
+  padding: 3rem 0;
+}
+
+.stats-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 250px;
+  background-color: #f8fafc;
+  border-radius: 1rem;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+  }
+  
+  .stat-number {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #4ade80;
+    margin-bottom: 0.5rem;
+  }
+  
+  .stat-label {
+    font-size: 1.25rem;
+    color: #1e293b;
+  }
+}
+
+/* Top Categories Section */
+.top-categories-section {
+  padding: 3rem 0;
+}
+
+.categories-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.category-card {
+  flex: 1;
+  min-width: 280px;
+  max-width: 350px;
+  background-color: white;
+  border-radius: 1rem;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .category-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  }
+  
+  .category-name {
+    font-size: 1.5rem;
+    color: #1e293b;
+    margin-bottom: 0.75rem;
+  }
+  
+  .category-description {
+    color: #64748b;
+    line-height: 1.5;
+  }
+}
+
+/* FAQ Section */
+.faq-section {
+  background-color: white;
+  padding: 3rem 0;
+}
+
+.faq-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.faq-item {
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.faq-question {
+  background-color: #f8fafc;
+  padding: 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  
+  h3 {
+    margin: 0;
+    font-size: 1.125rem;
+    color: #1e293b;
+  }
+  
+  .toggle-icon {
+    font-size: 1.5rem;
+    color: #3b82f6;
+    font-weight: bold;
+  }
+}
+
+.faq-answer {
+  background-color: white;
+  padding: 0 1.25rem;
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  
+  p {
+    margin: 0;
+    padding: 1.25rem 0;
+    color: #64748b;
+    line-height: 1.6;
+  }
+  
+  &.open {
+    max-height: 500px;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+  
+  .stats-container,
+  .categories-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .stat-card,
+  .category-card {
+    width: 100%;
+  }
+}
+
+.cta-buttons {
+  .btn {
+    i {
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+/* Stats Section */
+.stat-card {
+  position: relative;
+  overflow: hidden;
+  
+  .stat-icon {
+    position: absolute;
+    bottom: -15px;
+    right: -15px;
+    font-size: 5rem;
+    opacity: 0.1;
+    color: #4ade80;
+    transform: rotate(-15deg);
+  }
+}
+
+/* Top Categories Section */
+.category-card {
+  .category-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8fafc;
+    border-radius: 50%;
+    
+    i {
+      font-size: 2.5rem;
+    }
+  }
+}
+
+/* FAQ Section */
+.faq-question {
+  .toggle-icon {
+    font-size: 1rem;
+    color: #3b82f6;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: #e0e7ff;
+    
+    i {
+      font-size: 0.75rem;
+    }
+  }
 }
