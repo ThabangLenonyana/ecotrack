@@ -27,6 +27,7 @@ public class RecyclingLocationDTO {
     private String groupName;
 
     // Structured representation of accepted materials
+    @Builder.Default
     private Map<String, Boolean> acceptedMaterials = new HashMap<>();
 
     // Optional field for distance to the location(KM)

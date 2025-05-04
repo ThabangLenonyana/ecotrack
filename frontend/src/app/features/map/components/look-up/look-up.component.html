@@ -1,0 +1,118 @@
+<div class="lookup-container">
+  <div class="search-section">
+    <h1 class="lookup-title">Find Recycling Locations</h1>
+    <p class="lookup-description">
+      Search for recycling facilities near you or filter by accepted materials and facility types.
+    </p>
+    
+    <!-- Map Controls Component for Search & Filter -->
+    <app-map-controls 
+      (filtersChanged)="onFiltersChanged($event)"
+      (facilitiesUpdated)="onFacilitiesUpdated($event)">
+    </app-map-controls>
+  </div>
+  
+  <div class="results-section">
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Loading recycling facilities...</p>
+    </div>
+    
+    <!-- Error State -->
+    <div *ngIf="error" class="error-container">
+      <mat-icon color="warn">error_outline</mat-icon>
+      <p>{{ error }}</p>
+      <button mat-flat-button color="primary" (click)="loadFacilities()">Try Again</button>
+    </div>
+    
+    <!-- Results State -->
+    <div *ngIf="!isLoading && !error" class="results-content">
+      <!-- No Results Message -->
+      <div *ngIf="totalFacilities === 0" class="no-results">
+        <mat-icon>search_off</mat-icon>
+        <h3>No facilities found</h3>
+        <p>Try adjusting your search filters or searching a different area.</p>
+      </div>
+      
+      <!-- Results Count -->
+      <div *ngIf="totalFacilities > 0" class="results-count">
+        <p>Found <span class="count">{{ totalFacilities }}</span> recycling facilities</p>
+      </div>
+      
+      <!-- Facility Cards -->
+      <div *ngIf="totalFacilities > 0" class="facility-cards">
+        <div *ngFor="let facility of filteredFacilities" class="facility-card-container">
+          <mat-card class="facility-card">
+            <mat-card-content>
+              <div class="facility-header">
+                <h3 class="facility-name">{{ facility.name }}</h3>
+                <span class="facility-type">{{ facility.type }}</span>
+              </div>
+              
+              <div class="facility-info">
+                <!-- Address -->
+                <div class="info-row">
+                  <mat-icon>location_on</mat-icon>
+                  <span>{{ facility.address }}</span>
+                </div>
+                
+                <!-- Facility Operation/Hours -->
+                <div *ngIf="facility.operation" class="info-row">
+                  <mat-icon>access_time</mat-icon>
+                  <span>{{ facility.operation }}</span>
+                </div>
+                
+                <!-- Website if available -->
+                <div *ngIf="facility.website" class="info-row">
+                  <mat-icon>language</mat-icon>
+                  <a [href]="facility.website" target="_blank" rel="noopener noreferrer">{{ facility.website }}</a>
+                </div>
+                
+                <!-- Materials accepted -->
+                <div class="materials-section">
+                  <span class="materials-label">Accepts:</span>
+                  <div class="materials-chips">
+                    <span *ngFor="let material of formatMaterialsList(facility.acceptedMaterials)" class="material-chip">
+                      {{ material }}
+                    </span>
+                    <span *ngIf="getAdditionalMaterialsCount(facility.acceptedMaterials) > 0" class="material-more">
+                      +{{ getAdditionalMaterialsCount(facility.acceptedMaterials) }} more
+                    </span>
+                  </div>
+                </div>
+                
+                <!-- Distance if available -->
+                <div *ngIf="facility.distance" class="distance-badge">
+                  <mat-icon>directions</mat-icon>
+                  {{ facility.distance | number:'1.1-1' }} km
+                </div>
+              </div>
+            </mat-card-content>
+            
+            <mat-card-actions>
+              <button mat-button color="primary" (click)="viewFacilityDetails(facility)">
+                <mat-icon>info</mat-icon> DETAILS
+              </button>
+              <button mat-button color="accent" (click)="viewOnMap(facility)">
+                <mat-icon>map</mat-icon> VIEW ON MAP
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
+      
+      <!-- Pagination -->
+      <div *ngIf="totalFacilities > 0" class="pagination-container">
+        <mat-paginator
+          [length]="totalFacilities"
+          [pageSize]="pageSize"
+          [pageSizeOptions]="pageSizeOptions"
+          [pageIndex]="pageIndex"
+          (page)="onPageChange($event)"
+          aria-label="Select page of facilities">
+        </mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>

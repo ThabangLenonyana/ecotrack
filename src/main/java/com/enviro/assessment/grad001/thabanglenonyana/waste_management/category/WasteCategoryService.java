@@ -88,4 +88,16 @@ public class WasteCategoryService {
         }
         wasteCategoryRepository.deleteById(id);
     }   
+
+        /**
+     * Finds a waste category by its name
+     * @param name The name of the category to find
+     * @return The waste category entity
+     * @throws ResourceNotFoundException if the category is not found
+     */
+    @Transactional(readOnly = true)
+    public WasteCategory findByCategoryName(String name) {
+        return wasteCategoryRepository.findByNameIgnoreCase(name)
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with name: " + name));
+    }
 }
