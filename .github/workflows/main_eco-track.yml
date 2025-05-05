@@ -45,9 +45,9 @@ jobs:
           java-version: '17'
           cache: 'maven'
 
-      # Build backend with Maven
+      # Build backend with Maven with specific profile
       - name: Build with Maven
-        run: mvn clean install -DskipTests
+        run: mvn clean install -Dspring.profiles.active=prod
 
       # Upload artifacts for deployment job
       - name: Upload artifact for deployment job
@@ -69,6 +69,50 @@ jobs:
         with:
           name: waste-management-app
       
+      - name: Configure app settings
+        uses: azure/appservice-settings@v1
+        with:
+          app-name: 'eco-track'
+          slot-name: 'Production'
+          app-settings-json: |
+            [
+              {
+                "name": "SPRING_PROFILES_ACTIVE",
+                "value": "prod",
+                "slotSetting": false
+              },
+              {
+                "name": "WEBSITES_PORT",
+                "value": "8081",
+                "slotSetting": false
+              },
+              {
+                "name": "DB_URL",
+                "value": "jdbc:sqlserver://ecotrack-db.database.windows.net:1433;database=ecotrack-prod;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;",
+                "slotSetting": false
+              },
+              {
+                "name": "DB_USERNAME",
+                "value": "${{ secrets.DB_USERNAME }}",
+                "slotSetting": false
+              },
+              {
+                "name": "DB_PASSWORD",
+                "value": "${{ secrets.DB_PASSWORD }}",
+                "slotSetting": false
+              },
+              {
+                "name": "VISION_ENDPOINT",
+                "value": "${{ secrets.VISION_ENDPOINT }}",
+                "slotSetting": false
+              },
+              {
+                "name": "VISION_KEY",
+                "value": "${{ secrets.VISION_KEY }}",
+                "slotSetting": false
+              }
+            ]
+
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
