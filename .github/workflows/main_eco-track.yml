@@ -62,40 +62,18 @@ jobs:
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write #This is required for requesting the JWT
-      contents: read #This is required for actions/checkout
-  
+    
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: waste-management-app
       
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_29C595ADF75544A884E06D104B46C640 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_072533FD967A41ECB65EF0930EE61AD8 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_258512B88CEB4799B217715C8922EBD8 }}
-
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: eco-track
+          app-name: 'eco-track'
           slot-name: 'Production'
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: waste-management-0.0.1-SNAPSHOT.jar
-          
-      # Configure application settings
-      - name: Configure App Settings
-        uses: azure/CLI@v1
-        with:
-          inlineScript: |
-            az webapp config appsettings set --name eco-track --resource-group eco-track-group --settings \
-              SPRING_PROFILES_ACTIVE=prod \
-              DB_URL="${{ secrets.DB_URL }}" \
-              DB_USERNAME="${{ secrets.DB_USERNAME }}" \
-              DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
-              VISION_ENDPOINT="${{ secrets.VISION_ENDPOINT }}" \
-              VISION_KEY="${{ secrets.VISION_KEY }}"
