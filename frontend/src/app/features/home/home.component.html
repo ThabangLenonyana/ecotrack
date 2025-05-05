@@ -1,79 +1,82 @@
-<app-header></app-header>
+<!-- Remove the app-header from here, it's now in hero-section -->
+<app-hero-section 
+  (navigateToMapEvent)="navigateToMap()" 
+  (navigateToScannerEvent)="navigateToScanner()">
+</app-hero-section>
 
-<!-- Hero Section -->
-<section class="hero-section">
-  <div class="container">
-    <h1 class="hero-title">Recycle anything, anywhere, whilst tracking your environmental impact</h1>
-    <p class="hero-subtitle">Join the movement transforming South Africa's waste future - find local recycling points, get instant sorting guidance and earn rewards from loading retailers</p>
-    <div class="cta-buttons">
-      <button class="btn btn-primary" (click)="navigateToMap()">
-        <i class="fas fa-map-marker-alt mr-2"></i>Find Recycling Points
-      </button>
-      <button class="btn btn-secondary" (click)="navigateToScanner()">
-        <i class="fas fa-camera mr-2"></i>Scan & Recycle
-      </button>
-    </div>
-  </div>
-</section>
 
 <!-- Main Content -->
-<div class="main-content">
+<div class="content-container">
+<div class="main-content bg-gray-50">
   <!-- Stats Section -->
-  <section class="stats-section">
-    <div class="container">
-      <h2 class="section-title">Our Impact</h2>
-      <div class="stats-container">
-        <div class="stat-card">
-          <div class="stat-number">1500+</div>
-          <div class="stat-label">Facilities</div>
-          <i class="fas fa-building stat-icon"></i>
+  <section class="stats-section py-10 sm:py-12">
+    <div class="container mx-auto px-4">
+      <div class="section-header text-center mb-10">
+        <h2 class="section-title text-3xl md:text-4xl font-bold mb-3 text-gray-800">Our Environmental <span class="text-green-600">Impact</span></h2>
+        <div class="w-20 h-1 bg-gradient-to-r from-green-500 to-yellow-500 mx-auto mb-4"></div>
+        <p class="text-gray-600 max-w-2xl mx-auto text-sm sm:text-base">Discover how our network of recycling facilities is making a difference across Gauteng province and beyond.</p>
+      </div>
+      
+      <div class="stats-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <!-- Facilities Stat Card -->
+        <div class="stat-card bg-white backdrop-blur-sm rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group">
+          <div class="stat-card-bg h-1 bg-gradient-to-r from-green-500 to-green-600"></div>
+          <div class="p-5">
+            <div>
+              <div class="stat-number text-2xl lg:text-3xl font-bold text-gray-800 mb-1 transition-all group-hover:text-green-600">
+                1500<span class="text-yellow-500">+</span>
+              </div>
+              <div class="stat-label text-xs uppercase tracking-wider font-semibold text-gray-500">Recycling Facilities</div>
+            </div>
+            <p class="mt-3 text-gray-600 text-xs sm:text-sm">Partnered recycling centers across South Africa</p>
+          </div>
         </div>
-        <div class="stat-card">
-          <div class="stat-number">5</div>
-          <div class="stat-label">Gauteng Municipalities</div>
-          <i class="fas fa-city stat-icon"></i>
+
+        <!-- Municipalities Stat Card -->
+        <div class="stat-card bg-white backdrop-blur-sm rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group">
+          <div class="stat-card-bg h-1 bg-gradient-to-r from-yellow-500 to-amber-600"></div>
+          <div class="p-5">
+            <div>
+              <div class="stat-number text-2xl lg:text-3xl font-bold text-gray-800 mb-1 transition-all group-hover:text-yellow-600">5</div>
+              <div class="stat-label text-xs uppercase tracking-wider font-semibold text-gray-500">Gauteng Municipalities</div>
+            </div>
+            <p class="mt-3 text-gray-600 text-xs sm:text-sm">Complete municipal coverage in Gauteng province</p>
+          </div>
         </div>
-        <div class="stat-card">
-          <div class="stat-number">10+</div>
-          <div class="stat-label">Facility Types</div>
-          <i class="fas fa-industry stat-icon"></i>
+
+        <!-- Facility Types Card -->
+        <div class="stat-card bg-white backdrop-blur-sm rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group">
+          <div class="stat-card-bg h-1 bg-gradient-to-r from-green-500 to-green-600"></div>
+          <div class="p-5">
+            <div>
+              <div class="stat-number text-2xl lg:text-3xl font-bold text-gray-800 mb-1 transition-all group-hover:text-green-600">
+                10<span class="text-yellow-500">+</span>
+              </div>
+              <div class="stat-label text-xs uppercase tracking-wider font-semibold text-gray-500">Facility Types</div>
+            </div>
+            <p class="mt-3 text-gray-600 text-xs sm:text-sm">Specialized recycling for different materials</p>
+          </div>
         </div>
+
+    
       </div>
     </div>
   </section>
 
+  <!-- Top Categories Section -->
 <!-- Top Categories Section -->
-<section class="top-categories-section">
-  <div class="container">
-    <h2 class="section-title">Top Recycling Categories</h2>
-    <div class="categories-container">
-      <!-- Plastic Category - Hard-coded -->
-      <div class="category-card">
-        <div class="category-icon">
-          <i class="fas fa-recycle" style="color: #4ade80"></i>
-        </div>
-        <h3 class="category-name">Plastic</h3>
-        <p class="category-description">Recyclable plastic items including bottles, containers, and packaging</p>
-      </div>
-      
-      <!-- Paper Category - Hard-coded -->
-      <div class="category-card">
-        <div class="category-icon">
-          <i class="fas fa-newspaper" style="color: #3b82f6"></i>
-        </div>
-        <h3 class="category-name">Paper</h3>
-        <p class="category-description">Paper products like newspapers, magazines, and cardboard</p>
-      </div>
-      
-      <!-- Glass Category - Hard-coded -->
-      <div class="category-card">
-        <div class="category-icon">
-          <i class="fas fa-wine-bottle" style="color: #6366f1"></i>
-        </div>
-        <h3 class="category-name">Glass</h3>
-        <p class="category-description">Glass bottles and jars of all colors</p>
-      </div>
+<section class="top-categories-section py-10 bg-white">
+  <div class="container mx-auto px-4">
+    <div class="section-header text-center mb-10">
+      <h2 class="section-title text-3xl md:text-4xl font-bold mb-3 text-gray-800">Top Recycling <span
+          class="text-green-600">Categories</span></h2>
+      <div class="w-20 h-1 bg-gradient-to-r from-green-500 to-yellow-500 mx-auto mb-4"></div>
+      <p class="text-gray-600 max-w-2xl mx-auto text-sm sm:text-base">Learn about different types of materials that can
+        be recycled</p>
     </div>
+
+    <!-- Category Grid Component -->
+    <app-category-grid (viewDetails)="openCategoryModal($event)"></app-category-grid>
   </div>
 </section>
 
@@ -96,6 +99,7 @@
       </div>
     </div>
   </section>
+</div>
 </div>
 
 <app-category-modal></app-category-modal>

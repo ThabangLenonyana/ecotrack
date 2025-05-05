@@ -1,6 +1,6 @@
 <header class="text-gray-800 sticky top-0 z-50 py-4" [ngClass]="{'navbar-visible': isVisible, 'navbar-hidden': !isVisible}">
   <nav class="content-container">
-    <div class="navbar-pill bg-white shadow-lg">
+    <div class="navbar-pill bg-white shadow-lg relative z-50">
       <div class="flex justify-between items-center px-6 py-3">
         <!-- Logo -->
         <div class="flex items-center space-x-2">
@@ -9,36 +9,43 @@
         </div>
 
         <!-- Desktop Navigation Links -->
-        <div class="hidden md:flex space-x-8 animate-fade-in">
+        <div class="hidden md:flex items-center space-x-6 animate-fade-in">
           <a routerLink="/" 
              routerLinkActive="text-green-600"
              [routerLinkActiveOptions]="{exact: true}"
-             class="relative group px-2">
+             class="relative group px-2 flex items-center">
+            <i class="fas fa-home mr-2 w-5 text-center" [class.text-green-500]="isHomeRoute()"></i>
             <span class="text-gray-700 hover:text-green-600 font-medium transition-colors">Home</span>
             <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
           </a>
           <a routerLink="/map"
-            routerLinkActive="text-green-600"
-            class="relative group px-2">
+             routerLinkActive="text-green-600"
+             class="relative group px-2 flex items-center">
+            <i class="fas fa-map-marker-alt mr-2 w-5 text-center" [class.text-green-500]="isMapRoute()"></i>
             <span class="text-gray-700 hover:text-green-600 font-medium transition-colors">FacilityFinder</span>
             <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
           </a>
-          <a routerLink="/about"
+          <a routerLink="/dashboard"
              routerLinkActive="text-green-600"
-             class="relative group px-2">
-            <span class="text-gray-700 hover:text-green-600 font-medium transition-colors">Categories</span>
+             class="relative group px-2 flex items-center">
+            <i class="fas fa-chart-bar mr-2 w-5 text-center" [class.text-green-500]="isDashboardRoute()"></i>
+            <span class="text-gray-700 hover:text-green-600 font-medium transition-colors">Dashboard</span>
             <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
           </a>
-          <a routerLink="/scanner"
-             routerLinkActive="text-green-600"
-             class="relative group px-2">
-            <span class="text-gray-700 hover:text-green-600 font-medium transition-colors">EcoScanner</span>
-            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-green-600 transition-all duration-300 group-hover:w-full"></span>
-          </a>
+          
+          <!-- EcoScanner Button -->
+          <button
+              class="scanner-button flex items-center justify-center px-4 py-2 rounded-full bg-gradient-to-r from-yellow-500 to-amber-600 text-white font-medium hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-1 shadow-lg shadow-yellow-900/20 ml-2"
+              (click)="navigateToScanner()">
+              <span class="scanner-icon mr-2 text-white">
+                  <i class="fas fa-robot"></i>
+              </span>
+              <span class="whitespace-nowrap">EcoScanner</span>
+          </button>
         </div>
 
         <!-- Mobile Burger Menu Button -->
-        <button class="md:hidden w-10 h-10 flex items-center justify-center focus:outline-none" 
+        <button class="md:hidden w-10 h-10 flex items-center justify-center focus:outline-none relative z-50" 
                 (click)="toggleMobileMenu()"
                 aria-label="Toggle menu">
           <i class="fas" [ngClass]="isMobileMenuOpen ? 'fa-times' : 'fa-bars'" 
@@ -47,54 +54,52 @@
         </button>
       </div>
 
-      <!-- Mobile Menu - Fixed visibility issue -->
-      <div [@mobileMenuAnimation]="isMobileMenuOpen ? 'open' : 'closed'"
-           class="md:hidden overflow-hidden"
-           [style.display]="isMobileMenuOpen ? 'block' : 'none'">
-        <div class="flex flex-col py-4 px-6 space-y-4 border-t border-gray-100">
+      <!-- Mobile Menu -->
+      <div *ngIf="isMobileMenuOpen"
+           class="md:hidden overflow-hidden bg-white absolute top-full left-2 right-2 mt-2 rounded-xl shadow-xl z-40"
+           [@mobileMenuAnimation]="isMobileMenuOpen ? 'open' : 'closed'">
+        <div class="flex flex-col py-5 px-6 space-y-5 border-t border-gray-100">
           <a routerLink="/" 
              routerLinkActive="text-green-600 font-medium"
              [routerLinkActiveOptions]="{exact: true}"
              (click)="closeMobileMenu()"
-             class="flex items-center py-2 text-gray-700 hover:text-green-600 transition-colors">
-            <i class="fas fa-home mr-3 w-5 text-center"></i>
-            Home
+             class="flex items-center py-2.5 pl-2 rounded-lg hover:bg-gray-50 text-gray-700 hover:text-green-600 transition-colors">
+            <i class="fas fa-home mr-4 w-5 text-center text-green-500"></i>
+            <span class="font-medium">Home</span>
           </a>
           <a routerLink="/map"
              routerLinkActive="text-green-600 font-medium"
              (click)="closeMobileMenu()"
-             class="flex items-center py-2 text-gray-700 hover:text-green-600 transition-colors">
-            <i class="fas fa-map-marker-alt mr-3 w-5 text-center"></i>
-            FacilityFinder
-          </a>
-          <a routerLink="/about"
-             routerLinkActive="text-green-600 font-medium"
-             (click)="closeMobileMenu()"
-             class="flex items-center py-2 text-gray-700 hover:text-green-600 transition-colors">
-            <i class="fas fa-info-circle mr-3 w-5 text-center"></i>
-            Categories
+             class="flex items-center py-2.5 pl-2 rounded-lg hover:bg-gray-50 text-gray-700 hover:text-green-600 transition-colors">
+            <i class="fas fa-map-marker-alt mr-4 w-5 text-center text-green-500"></i>
+            <span class="font-medium">FacilityFinder</span>
           </a>
           <a routerLink="/dashboard"
              routerLinkActive="text-green-600 font-medium"
              (click)="closeMobileMenu()"
-             class="flex items-center py-2 text-gray-700 hover:text-green-600 transition-colors">
-            <i class="fas fa-chart-bar mr-3 w-5 text-center"></i>
-            Dashboard
+             class="flex items-center py-2.5 pl-2 rounded-lg hover:bg-gray-50 text-gray-700 hover:text-green-600 transition-colors">
+            <i class="fas fa-chart-bar mr-4 w-5 text-center text-green-500"></i>
+            <span class="font-medium">Dashboard</span>
           </a>
-          <a routerLink="/scanner"
-             routerLinkActive="text-green-600 font-medium"
-             (click)="closeMobileMenu()"
-             class="flex items-center py-2 text-gray-700 hover:text-green-600 transition-colors">
-            <i class="fas fa-camera mr-3 w-5 text-center"></i>
-            EcoScanner
-          </a>
+          
+          <!-- EcoScanner Button for Mobile -->
+          <div class="mt-3 px-1 pt-3 border-t border-gray-100">
+            <button
+                class="scanner-button flex items-center justify-center w-full px-5 py-3.5 rounded-xl bg-gradient-to-r from-yellow-500 to-amber-600 text-white font-medium hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2 shadow-lg shadow-yellow-900/20"
+                (click)="navigateToScanner(); closeMobileMenu()">
+                <span class="scanner-icon mr-3 text-white text-lg">
+                    <i class="fas fa-robot"></i>
+                </span>
+                <span class="font-medium text-base">EcoScanner</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </nav>
 
-  <!-- Backdrop for mobile menu -->
+  <!-- Semi-transparent backdrop for mobile menu -->
   <div *ngIf="isMobileMenuOpen" 
-       class="fixed inset-0 bg-black bg-opacity-30 z-40"
+       class="fixed inset-0 bg-black bg-opacity-30 z-30"
        (click)="closeMobileMenu()"></div>
 </header>

@@ -13,20 +13,18 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
   animations: [
     trigger('mobileMenuAnimation', [
       state('closed', style({
-        opacity: 0,
-        transform: 'translateY(-20px)',
-        visibility: 'hidden'
+        height: '0',
+        opacity: 0
       })),
       state('open', style({
-        opacity: 1,
-        transform: 'translateY(0)',
-        visibility: 'visible'
+        height: '*',
+        opacity: 1
       })),
       transition('closed => open', [
-        animate('0.2s ease-out')
+        animate('250ms ease-out')
       ]),
       transition('open => closed', [
-        animate('0.2s ease-in')
+        animate('200ms ease-in')
       ])
     ])
   ]
@@ -60,10 +58,22 @@ export class HeaderComponent implements OnInit {
 
   toggleMobileMenu() {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
+    
+    // When menu is open, prevent body scrolling
+    if (this.isMobileMenuOpen) {
+      document.body.classList.add('overflow-hidden');
+    } else {
+      document.body.classList.remove('overflow-hidden');
+    }
   }
 
   closeMobileMenu() {
     this.isMobileMenuOpen = false;
+    document.body.classList.remove('overflow-hidden');
+  }
+
+  navigateToScanner(): void {
+    this.router.navigate(['/scanner']);
   }
 
   @HostListener('window:scroll')
@@ -92,6 +102,23 @@ export class HeaderComponent implements OnInit {
     // Close mobile menu if screen is resized to desktop view
     if (window.innerWidth >= 768) { // 768px is the md breakpoint in Tailwind
       this.isMobileMenuOpen = false;
+      document.body.classList.remove('overflow-hidden');
     }
+  }
+
+  isHomeRoute(): boolean {
+    return this.router.url === '/';
+  }
+
+  isMapRoute(): boolean {
+    return this.router.url.includes('/map');
+  }
+
+  isAboutRoute(): boolean {
+    return this.router.url.includes('/about');
+  }
+
+  isDashboardRoute(): boolean {
+    return this.router.url.includes('/dashboard');
   }
 }

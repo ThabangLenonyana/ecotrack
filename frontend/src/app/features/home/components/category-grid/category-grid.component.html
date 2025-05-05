@@ -1,17 +1,77 @@
-<section class="content-section rounded-2xl p-8 hover:shadow-xl transition-shadow duration-300">
-  <div class="max-w-4xl mx-auto text-center mb-12">
-    <span class="inline-block px-4 py-1 bg-green-50 text-green-600 rounded-full text-sm font-medium">
-      Discover Waste Categories
-    </span>
-    <h2 class="text-3xl font-bold text-gray-800 mt-4">Browse Categories</h2>
-    <p class="text-gray-600 mt-2">Find detailed guidelines for proper waste disposal</p>
+<section class="content-section">
+  <div class="relative px-8 md:px-10 lg:px-12">
+    <!-- Category Carousel -->
+    <div class="carousel-container overflow-hidden">
+      <div class="carousel-track flex transition-transform duration-300"
+           [style.transform]="'translateX(' + (-currentIndex * 33.33) + '%)'">
+        <div *ngFor="let category of featuredCategories; let i = index" class="carousel-item w-full md:w-1/2 lg:w-1/3 flex-shrink-0 px-3">
+          <app-category-card 
+            [category]="category"
+            (viewDetails)="onViewDetails($event)">
+          </app-category-card>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Carousel Navigation Controls -->
+    <button 
+      class="carousel-control left absolute top-1/2 -left-2 sm:left-0 transform -translate-y-1/2 bg-green-600 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 z-10"
+      [class.invisible]="currentIndex === 0"
+      (click)="prevSlide()"
+      aria-label="Previous categories">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    
+    <button 
+      class="carousel-control right absolute top-1/2 -right-2 sm:right-0 transform -translate-y-1/2 bg-green-600 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 z-10"
+      [class.invisible]="currentIndex >= featuredCategories.length - carouselItemsToShow"
+      (click)="nextSlide()"
+      aria-label="Next categories">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+    
+    <!-- Dynamic Carousel Indicators -->
+    <div class="carousel-indicators flex justify-center mt-8 gap-2">
+      <button 
+        *ngFor="let _ of getIndicatorGroups(); let i = index" 
+        class="indicator-dot h-2 transition-all duration-300 rounded-full"
+        [ngClass]="{
+          'w-16 bg-green-600': getCurrentGroup() === i,
+          'w-8 bg-gray-300 hover:bg-gray-400': getCurrentGroup() !== i
+        }"
+        (click)="goToGroup(i)"
+        [attr.aria-label]="'Go to category group ' + (i + 1)">
+      </button>
+    </div>
   </div>
-
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <app-category-card 
-      *ngFor="let category of categories" 
-      [category]="category"
-      (viewDetails)="onViewDetails($event)">
-    </app-category-card>
+  
+  <!-- Show More Button -->
+  <div class="text-center mt-10">
+    <button 
+      class="bg-white border border-green-600 text-green-600 px-6 py-3 rounded-lg font-medium hover:bg-green-50 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500"
+      (click)="showAllCategories()"
+      [class.hidden]="showingAllCategories">
+      Show All Categories
+      <i class="fas fa-chevron-down ml-2"></i>
+    </button>
+    
+    <!-- Full Grid (initially hidden) -->
+    <div [class.hidden]="!showingAllCategories" class="mt-10">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <app-category-card 
+          *ngFor="let category of categories" 
+          [category]="category"
+          (viewDetails)="onViewDetails($event)">
+        </app-category-card>
+      </div>
+      
+      <!-- Hide Button -->
+      <button 
+        class="mt-8 bg-white border border-green-600 text-green-600 px-6 py-3 rounded-lg font-medium hover:bg-green-50 transition-colors focus:outline-none focus:ring-2 focus:ring-green-500"
+        (click)="hideAllCategories()">
+        Show Less
+        <i class="fas fa-chevron-up ml-2"></i>
+      </button>
+    </div>
   </div>
 </section>

@@ -1,56 +1,94 @@
-<footer class="bg-gray-100 text-gray-600 py-8 mt-auto">
-  <div class="content-container">
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+<footer class=" text-white py-10">
+  <div class="container mx-auto px-4 md:px-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
       <!-- Company Info -->
       <div class="space-y-4">
         <div class="flex items-center space-x-2">
-          <div class="eco-leaf text-green-600"></div>
-          <span class="text-xl font-semibold text-gray-900">Enviro365</span>
+          <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+            <i class="fas fa-leaf text-green-400"></i>
+          </div>
+          <span class="text-xl font-semibold text-white">EcoTrack</span>
         </div>
-        <p class="text-sm">
-          Empowering sustainable waste management through innovative solutions.
+        <p class="text-sm text-gray-300">
+          Empowering sustainable waste management through innovative technology and community engagement.
         </p>
+        <div class="flex space-x-4 pt-2">
+          <a href="#" class="text-white hover:text-yellow-400 transition-colors">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="#" class="text-white hover:text-yellow-400 transition-colors">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="#" class="text-white hover:text-yellow-400 transition-colors">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="#" class="text-white hover:text-yellow-400 transition-colors">
+            <i class="fab fa-linkedin-in"></i>
+          </a>
+        </div>
       </div>
 
       <!-- Quick Links -->
       <div>
-        <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+        <h3 class="text-lg font-semibold mb-4 flex items-center space-x-2">
+          <i class="fas fa-link text-yellow-400 text-sm"></i>
+          <span>Quick Links</span>
+        </h3>
         <ul class="space-y-2">
-          <li><a routerLink="/" class="hover:text-green-600 transition-colors">Home</a></li>
-          <li><a routerLink="/about" class="hover:text-green-600 transition-colors">About</a></li>
-          <li><a routerLink="/dashboard" class="hover:text-green-600 transition-colors">Dashboard</a></li>
+          <li><a routerLink="/" class="text-gray-300 hover:text-yellow-400 transition-colors">Home</a></li>
+          <li><a routerLink="/facility-finder" class="text-gray-300 hover:text-yellow-400 transition-colors">Find Recycling Points</a></li>
+          <li><a routerLink="/eco-scanner" class="text-gray-300 hover:text-yellow-400 transition-colors">EcoScanner</a></li>
+          <li><a routerLink="/dashboard" class="text-gray-300 hover:text-yellow-400 transition-colors">My Dashboard</a></li>
         </ul>
       </div>
 
       <!-- Resources -->
       <div>
-        <h3 class="text-lg font-semibold mb-4">Resources</h3>
+        <h3 class="text-lg font-semibold mb-4 flex items-center space-x-2">
+          <i class="fas fa-book text-yellow-400 text-sm"></i>
+          <span>Resources</span>
+        </h3>
         <ul class="space-y-2">
-          <li><a href="#" class="hover:text-green-600 transition-colors">Blog</a></li>
-          <li><a href="#" class="hover:text-green-600 transition-colors">Recycling Guide</a></li>
-          <li><a href="#" class="hover:text-green-600 transition-colors">FAQ</a></li>
+          <li><a href="#" class="text-gray-300 hover:text-yellow-400 transition-colors">Recycling Guide</a></li>
+          <li><a href="#" class="text-gray-300 hover:text-yellow-400 transition-colors">Waste Categories</a></li>
+          <li><a href="#" class="text-gray-300 hover:text-yellow-400 transition-colors">Environmental Impact</a></li>
+          <li><a href="#" class="text-gray-300 hover:text-yellow-400 transition-colors">FAQ</a></li>
         </ul>
       </div>
 
       <!-- Contact -->
       <div>
-        <h3 class="text-lg font-semibold mb-4">Contact</h3>
-        <ul class="space-y-2">
-          <li class="flex items-center space-x-2">
-            <i class="fas fa-envelope text-green-600"></i>
-            <span>contactenviro365.com</span>
+        <h3 class="text-lg font-semibold mb-4 flex items-center space-x-2">
+          <i class="fas fa-headset text-yellow-400 text-sm"></i>
+          <span>Contact</span>
+        </h3>
+        <ul class="space-y-3">
+          <li class="flex items-center space-x-3">
+            <i class="fas fa-envelope text-yellow-400"></i>
+            <a href="mailto:contact@enviro365.com" class="text-gray-300 hover:text-yellow-400 transition-colors">contact&#64;ecotrack.co.za</a>
           </li>
-          <li class="flex items-center space-x-2">
-            <i class="fas fa-phone text-green-600"></i>
-            <span>+1 (555) 123-4567</span>
+          <li class="flex items-center space-x-3">
+            <i class="fas fa-phone-alt text-yellow-400"></i>
+            <a href="tel:+27555123456" class="text-gray-300 hover:text-yellow-400 transition-colors">+27 (55) 512-3456</a>
+          </li>
+          <li class="flex items-center space-x-3">
+            <i class="fas fa-map-marker-alt text-yellow-400"></i>
+            <span class="text-gray-300">Johannesburg, South Africa</span>
           </li>
         </ul>
       </div>
     </div>
 
-    <!-- Copyright -->
-    <div class="border-t border-gray-200 mt-8 pt-8 text-center">
-      <p>&#169; {{currentYear}} Enviro365. All rights reserved.</p>
+    <!-- Divider -->
+    <div class="border-t border-green-800 mt-8 pt-6 flex flex-col md:flex-row justify-between items-center">
+      <p class="text-gray-400 text-sm mb-4 md:mb-0">© {{currentYear}} EcoTrack. All rights reserved.</p>
+      
+      <!-- Legal Links -->
+      <div class="flex space-x-6 text-sm">
+        <a href="#" class="text-gray-400 hover:text-yellow-400 transition-colors">Privacy Policy</a>
+        <a href="#" class="text-gray-400 hover:text-yellow-400 transition-colors">Terms of Service</a>
+        <a href="#" class="text-gray-400 hover:text-yellow-400 transition-colors">Cookie Policy</a>
+      </div>
     </div>
   </div>
 </footer>

@@ -1,113 +1,154 @@
-.hero-section {
-    position: relative;
-    min-height: 100svh;
-    width: 100%;
-    color: white;
-    margin-top: -64px;
-    padding-top: 64px;
-    overflow: hidden;
-    background-color: #064e3b; // Fallback color
-    z-index: 0;
-
-    canvas {
-        position: fixed !important;
-        top: 0;
-        left: 0;
-        width: 100% !important;
-        height: 100% !important;
-        z-index: 1;
-      }
-  
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
-      z-index: -1;
-    }
-  
-    @media (min-width: 768px) {
-      margin-top: -80px;
-      padding-top: 80px;
-    }
-  
-    @media (min-width: 1024px) {
-      margin-top: -100px;
-      padding-top: 100px;
-    }
+// Hero section layout improvements
+.hero-wrapper {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow-x: hidden;
+  // Remove the separate hero background
 }
 
+// Remove .hero-bg class since we'll use the home page background
+
+// Earth globe improvements
+.earth-globe-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.earth-globe {
+  position: relative;
+  width: 450px;
+  height: 450px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: rgba(10, 30, 50, 0.05);
+  box-shadow: 
+    0 0 80px rgba(255, 215, 0, 0.35),
+    0 0 60px rgba(255, 193, 7, 0.25),
+    0 0 40px rgba(255, 215, 0, 0.15),
+    inset 0 0 50px rgba(255, 215, 0, 0.15);
+  animation: glowPulse 4s infinite alternate ease-in-out;
+  
+  @media (max-width: 1280px) {
+    width: 400px;
+    height: 400px;
+  }
+  
+  @media (max-width: 1024px) {
+    display: none;
+  }
+}
+
+// Style the particles container
+::ng-deep {
+  #ecoParticles {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 1 !important;
+    
+    canvas {
+      position: absolute !important;
+      width: 100% !important;
+      height: 100% !important;
+      display: block !important;
+    }
+  }
+}
+
+/* Make header more compact */
+app-header {
+  position: relative;
+  z-index: 20; // Even higher z-index for the header
+  width: 100%;
+  /* Add this to reduce any internal spacing */
+  margin-bottom: -1rem;
+}
+
+.hero-section {
+  position: relative;
+  width: 100%;
+  color: white;
+  padding-top: 0;  /* Keep this at 0 */
+  overflow: hidden;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  /* Adjust flex value to push content up slightly */
+  flex: 1 0 auto;
+  /* Explicitly set margin-top to 0 to prevent any unexpected spacing */
+  margin-top: 0;
+  min-height: 100vh;
+  
+  canvas {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 1;
+  }
+}
+
+// Make sure your content appears above particles
 .hero-content {
   position: relative;
-  z-index: 2;
+  z-index: 10; // Higher z-index to appear above particles
   width: 100%;
-  padding: 2rem;
+  padding: 1rem;
+  
+  @media (min-width: 640px) {
+    padding: 2rem;
+  }
 
   h2 {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     letter-spacing: -0.02em;
-    
-    span:first-child {
-      opacity: 0.95;
-    }
-    
-    span:last-child {
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-      letter-spacing: -0.01em;
-    }
+    margin-bottom: 1.25rem;
   }
 
   p {
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
-    letter-spacing: 0.01em;
-    
-    span {
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-    }
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
   }
 
   h2, p, span {
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1); // Subtle text shadow for better readability
+    transform: translateZ(0);
   }
 
   h2 {
-    color: rgba(249, 250, 251, 0.95); // Almost white (gray-50)
-    
-    span {
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); // Slightly stronger shadow for emphasis
-    }
+    font-family: 'Inter', sans-serif;
   }
 
   .btn-primary, .btn-secondary {
-    position: relative;
-    overflow: hidden;
-    
-    &:hover {
-      transform: translateY(-2px);
-    }
-    
-    &:active {
-      transform: translateY(0);
-    }
+    text-shadow: none;
+    white-space: nowrap;
   }
   
   .btn-primary {
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(22, 101, 52, 0.1), transparent);
-      transition: left 0.7s;
-    }
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  }
+  
+  // New styles for the CTA container
+  .cta-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
     
-    &:hover::before {
-      left: 100%;
+    @media (min-width: 640px) {
+      flex-direction: row;
+      gap: 1rem;
     }
   }
 }
@@ -125,9 +166,9 @@
 }
 
 .animate-slide-up {
+  animation: slideUp 0.6s ease forwards;
   opacity: 0;
   transform: translateY(20px);
-  animation: slideUp 0.8s ease-in-out forwards;
 }
 
 .delay-200 {
@@ -159,5 +200,251 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+.gradient-text {
+  background: linear-gradient(
+    to left, 
+    #ffffff 0%, /* white */
+    #f59e0b 25%,    /* yellow-500 */
+    #ffffff 50%,
+    #fbbf24 100%, /* white */
+  
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textShine 10s linear infinite;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes textShine {
+  to {
+    background-position: 200% center;
+  }
+}
+
+@keyframes glowPulse {
+  0% {
+    box-shadow: 
+      0 0 80px rgba(255, 215, 0, 0.35),
+      0 0 60px rgba(255, 193, 7, 0.25),
+      0 0 40px rgba(255, 215, 0, 0.15),
+      inset 0 0 50px rgba(255, 215, 0, 0.15);
+  }
+  50% {
+    box-shadow: 
+      0 0 90px rgba(255, 215, 0, 0.4),
+      0 0 70px rgba(255, 193, 7, 0.3),
+      0 0 50px rgba(255, 215, 0, 0.2),
+      inset 0 0 60px rgba(255, 215, 0, 0.2);
+  }
+  100% {
+    box-shadow: 
+      0 0 80px rgba(255, 215, 0, 0.35),
+      0 0 60px rgba(255, 193, 7, 0.25),
+      0 0 40px rgba(255, 215, 0, 0.15),
+      inset 0 0 50px rgba(255, 215, 0, 0.15);
+  }
+}
+
+// Replace debug class with proper container
+.particles-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1; 
+  pointer-events: none;
+  // No debug border
+}
+
+// Globe-shaped particles container
+.particles-globe-container {
+  position: relative;
+  background: rgba(0, 0, 0, 0.01); // More subtle background
+  backdrop-filter: blur(3px);
+  box-shadow: 0 0 50px rgba(52, 211, 153, 0.15); // Keep subtle glow
+  width: 100%;
+  aspect-ratio: 1/1;
+  max-width: 500px;
+  margin: 0 auto;
+  overflow: hidden;
+  border: none; // Remove the border
+  transform: translateZ(0);
+}
+
+::ng-deep {
+  #ecoParticles {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 1 !important;
+    
+    canvas {
+      position: absolute !important;
+      width: 100% !important;
+      height: 100% !important;
+      display: block !important;
+    }
+  }
+}
+
+// Make content container responsive
+.content-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  
+  @media (min-width: 1024px) {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+// Hide globe on mobile
+@media (max-width: 1023px) {
+  .particles-globe-container {
+    display: none;
+  }
+}
+
+.hero-search-container {
+  width: 100%;
+  
+  .search-input-wrapper {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    transition: all 0.3s ease;
+    
+    &:hover, &:focus-within {
+      box-shadow: 0 0 15px rgba(72, 187, 120, 0.3);
+      border-color: rgba(72, 187, 120, 0.5);
+    }
+    
+    .search-icon {
+      display: flex;
+      align-items: center;
+    }
+    
+    .search-input {
+      flex: 1;
+      height: 100%;
+      font-size: 0.95rem;
+      
+      &::placeholder {
+        opacity: 0.7;
+      }
+    }
+    
+    .location-button {
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      font-size: 0.95rem;
+      
+      &:active {
+        transform: scale(0.97);
+      }
+    }
+  }
+}
+
+.eco-scanner-cta {
+  width: 100%;
+  
+  @media (min-width: 640px) {
+    width: auto;
+  }
+  
+  .scanner-button {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    
+    @media (min-width: 640px) {
+      width: auto;
+    }
+    
+    &:active {
+      transform: scale(0.97);
+    }
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(
+        to right,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+      );
+      transition: left 0.7s ease-in-out;
+    }
+    
+    &:hover::before {
+      left: 150%;
+    }
+  }
+}
+
+// Adjust existing animations
+.delay-400 {
+  animation-delay: 400ms;
+}
+
+// Styles for feature highlights
+.features-highlights {
+  margin-top: 0.75rem;
+  
+  .feature-item {
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+    }
+    
+    .feature-icon {
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+// Media queries for responsiveness
+@media (max-width: 639px) {
+  .hero-content h2 {
+    font-size: 2.25rem;
+  }
+  
+  .features-highlights {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .hero-content h2 {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 1023px) {
+  .earth-globe-container {
+    display: none;
   }
 }

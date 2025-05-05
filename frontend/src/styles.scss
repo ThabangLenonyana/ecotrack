@@ -1,7 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Tell SCSS linter to ignore these Tailwind directives */
+/* stylelint-disable */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* stylelint-enable */
+
+@import '@fortawesome/fontawesome-free/css/all.min.css';
 
 .content-container {
   max-width: 1280px;
@@ -10,8 +16,10 @@
   margin-right: auto;
   padding-left: 1rem;
   padding-right: 1rem;
+  border-radius: 50px;
 }
 
+/* Removed duplicate animation definition */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -27,17 +35,8 @@
   min-height: 500px;
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.8s ease-out;
-}
-
 .animate-slide-up {
   animation: slideUp 0.8s ease-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
 }
 
 @keyframes slideUp {

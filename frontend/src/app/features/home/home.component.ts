@@ -3,8 +3,9 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { WasteCategory } from '../../models/waste-category';
 import { CategoryModalComponent } from './components/category-modal/category-modal.component';
-import { HeaderComponent } from '../../shared/header/header.component';
+import { CategoryGridComponent } from './components/category-grid/category-grid.component';
 import { FooterComponent } from '../../shared/footer/footer.component';
+import { HeroSectionComponent } from './components/hero-section/hero-section.component';
 
 interface FAQ {
   question: string;
@@ -17,9 +18,10 @@ interface FAQ {
   standalone: true,
   imports: [
     CommonModule, 
-    CategoryModalComponent, 
-    HeaderComponent, 
-    FooterComponent
+    CategoryModalComponent,  
+    FooterComponent,
+    HeroSectionComponent,
+    CategoryGridComponent
   ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
@@ -60,6 +62,7 @@ export class HomeComponent implements OnInit {
   openCategoryModal(category: WasteCategory): void {
     this.categoryModal.open(category);
   }
+
   
   navigateToMap(): void {
     this.router.navigate(['/facility-finder']);
