@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.env.Environment;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -14,9 +15,8 @@ public class ApplicationStartupLogger implements ApplicationListener<Application
 
     @Autowired
     private Environment environment;
-
     @Override
-    public void onApplicationEvent(ApplicationReadyEvent event) {
+    public void onApplicationEvent(@NonNull ApplicationReadyEvent event) {
         String serverPort = environment.getProperty("server.port", "8080");
         String activeProfile = String.join(", ", environment.getActiveProfiles());
         

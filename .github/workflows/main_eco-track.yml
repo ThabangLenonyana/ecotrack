@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy JAR app to Azure Web App - eco-track
+name: Build and deploy EcoTrack to Azure Web App
 
 on:
   push:
@@ -18,20 +18,43 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Setup Node.js for frontend build
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          
+      # Build Angular frontend
+      - name: Build Angular frontend
+        working-directory: ./frontend
+        run: |
+          npm ci
+          npm run build --configuration=production
+          
+      # Copy frontend build to static resources directory
+      - name: Copy frontend build to Spring static directory
+        run: |
+          mkdir -p src/main/resources/static
+          cp -r frontend/dist/frontend/browser/* src/main/resources/static/
+
+      # Setup Java for backend build
       - name: Set up Java version
         uses: actions/setup-java@v4
         with:
+          distribution: 'temurin'
           java-version: '17'
-          distribution: 'microsoft'
+          cache: 'maven'
 
+      # Build backend with Maven
       - name: Build with Maven
-        run: mvn clean install
+        run: mvn clean install -DskipTests
 
+      # Upload artifacts for deployment job
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
-          name: java-app
-          path: '${{ github.workspace }}/target/*.jar'
+          name: waste-management-app
+          path: target/waste-management-0.0.1-SNAPSHOT.jar
 
   deploy:
     runs-on: ubuntu-latest
@@ -47,10 +70,10 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
-          name: java-app
+          name: waste-management-app
       
       - name: Login to Azure
-        uses: azure/login@v2
+        uses: azure/login@v1
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_29C595ADF75544A884E06D104B46C640 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_072533FD967A41ECB65EF0930EE61AD8 }}
@@ -58,9 +81,21 @@ jobs:
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
-        uses: azure/webapps-deploy@v3
+        uses: azure/webapps-deploy@v2
         with:
-          app-name: 'eco-track'
+          app-name: eco-track
           slot-name: 'Production'
-          package: '*.jar'
+          package: waste-management-0.0.1-SNAPSHOT.jar
           
+      # Configure application settings
+      - name: Configure App Settings
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az webapp config appsettings set --name eco-track --resource-group eco-track-group --settings \
+              SPRING_PROFILES_ACTIVE=prod \
+              DB_URL="${{ secrets.DB_URL }}" \
+              DB_USERNAME="${{ secrets.DB_USERNAME }}" \
+              DB_PASSWORD="${{ secrets.DB_PASSWORD }}" \
+              VISION_ENDPOINT="${{ secrets.VISION_ENDPOINT }}" \
+              VISION_KEY="${{ secrets.VISION_KEY }}"
