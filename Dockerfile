@@ -23,11 +23,6 @@ COPY --from=backend-build /app/target/waste-management-0.0.1-SNAPSHOT.jar app.ja
 # Default to dev profile if not specified
 ENV SPRING_PROFILES_ACTIVE=dev
 # Environment variables for Azure Vision, etc.
-ENV VISION_KEY='8dDtti7walT8MVpPKjPAYm92VX4UXWpnaIGrlvXdvLiupeK2SFjtJQQJ99BEACYeBjFXJ3w3AAAFACOGhKFE'
-ENV VISION_ENDPOINT='https://ecotrack-vision-service.cognitiveservices.azure.com/'
-ENV DB_URL='jdbc:h2:mem:wastesortdb'
-ENV DB_USERNAME='sa'
-ENV DB_PASSWORD=''
 
 # Expose correct port
 EXPOSE 8081

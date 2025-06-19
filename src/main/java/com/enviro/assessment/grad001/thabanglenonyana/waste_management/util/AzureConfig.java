@@ -21,7 +21,7 @@ public class AzureConfig {
     private String visionEndpoint;
 
     @Bean
-    @Profile("prod")
+    @Profile("dev")
     public ImageAnalysisClient imageAnalysisClient() {
         if (visionKey == null || visionKey.isEmpty()) {
             logger.error("Azure Vision API key is not configured. Set the VISION_KEY environment variable or azure.vision.key property.");
@@ -41,7 +41,7 @@ public class AzureConfig {
     }
     
     @Bean
-    @Profile("!prod")
+    @Profile("prod")
     public ImageAnalysisClient devImageAnalysisClient() {
         // For non-production environments, you could implement a mock client
         // or return null if the service is not needed in development
